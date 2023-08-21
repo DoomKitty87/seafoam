@@ -2,14 +2,14 @@ const fs = require('fs');
 
 const overallPads = [];
 // Loading etherwarp pad coordinates
-const padFile = fs.readFileSync('padsv3.txt', 'utf8');
+const padFile = fs.readFileSync('assets/padsv3.txt', 'utf8');
 const padLines = padFile.trim().split('\n');
 for (const line of padLines) {
   const [x, y, z] = line.split(' ').map(Number);
   overallPads.push(x, y, z);
 }
 
-const gemstoneData = fs.readFileSync('blockarraydatav3.txt', 'utf8');
+const gemstoneData = fs.readFileSync('assets/blockarraydatav3.txt', 'utf8');
 const blockData = [];
 const lines = gemstoneData.trim().split('\n');
 for (let x = 0; x < 622; x++) {
@@ -22,7 +22,7 @@ for (let x = 0; x < 622; x++) {
 }
 
 const gemDensities = [];
-const densityFile = fs.readFileSync('densitylistv3.txt', 'utf8');
+const densityFile = fs.readFileSync('assets/densitylistv3.txt', 'utf8');
 const densityLines = densityFile.trim().split('\n');
 for (const line of densityLines) {
   gemDensities.push(Number(line));
@@ -201,7 +201,7 @@ async function generateRoute(sector, allowedOOB) {
   const outPath = lowestAvgDistPath;
   const outPathDensity = lowestAvgDistDensity;
   const outPathDist = lowestAvgDist;
-  
+
   var pathOutput = "[";
   for (var i = 0; i < outPath.length / 3; i++) {
     pathOutput += "{\"x\":" + outPath[i * 3] + ",\"y\":" + outPath[i * 3 + 1] + ",\"z\":" + outPath[i * 3 + 2] + ",\"r\":0,\"g\":1,\"b\":0,\"options\":{\"name\":\"" + (i + 1) + "\"}}";
