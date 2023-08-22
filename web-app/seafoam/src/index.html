@@ -31,6 +31,10 @@
               <div class="infobox">
                 <h1 class="infotitle">ROUTE AREA</h1>
                 <h3 class="infodesc">Click to choose the area where your route will generate.</h3>
+                <form>
+                  <input class="mfbox" type="checkbox" id="mfbox">
+                  <label class="mfbox" for="mfbox">Magma Fields Only (Ruby/Topaz)</label>
+                </form>
               </div>
               <div class="nextbutton">
                 <h2 class="nextbuttontext" onclick="moveStep()">NEXT &#8594</h2>
@@ -173,7 +177,7 @@
       </div>
     </div>
   <script>
-    async function generateRoute(sector, allowedOOB, priority, waypointCount, angleEnable, angle22, angle33) {
+    async function generateRoute(sector, allowedOOB, priority, waypointCount, angleEnable, angle22, angle33, mfOnly) {
       const angle3 = Math.min(angle33, 360 - angle33);
       const angle2 = Math.min(angle22, 360 - angle22);
       allowedOOB = parseInt(allowedOOB);
@@ -234,6 +238,7 @@
       console.log(sectors[sector][0] + allowedOOB, sectors[sector][2] - allowedOOB, sectors[sector][1] - allowedOOB, sectors[sector][3] + allowedOOB)
       for (var i = 0; i < overallPads.length / 3; i++) {
         if (overallPads[i * 3] <= sectors[sector][0] + allowedOOB && overallPads[i * 3] > sectors[sector][2] - allowedOOB && overallPads[i * 3 + 2] >= sectors[sector][1] - allowedOOB && overallPads[i * 3 + 2] < sectors[sector][3] + allowedOOB) {
+          if (mfOnly && overallPads[i * 3 + 1] >= 64) continue;
           padCoords.push(overallPads[i * 3]);
           padCoords.push(overallPads[i * 3 + 1]);
           padCoords.push(overallPads[i * 3 + 2]);
@@ -283,7 +288,7 @@
                 angleWeight = Math.abs(Math.min(angleDiff, 360 - angleDiff) - angle2) / 100 + 1
               }
             }
-            weight = angleWeight * (Math.pow(dist, 2) + Math.pow(startdist, 1 * ((usedPads.length + 1) / desiredPathLength))) / ((gemDensity - 44) * 4);
+            weight = angleWeight * (Math.pow(dist, 2) + Math.pow(startdist, 1 * (usedPads.length / desiredPathLength))) / ((gemDensity - 44) * 4);
             if (dist > 62) weight = Infinity;
 
             weightChart.push(weight);
@@ -418,6 +423,8 @@
     var activeSquareIndex = -1;
     var currentStep = 1;
 
+    var mfOnly = false;
+
     var waypointNumber = 150;
 
     var priority = "tp";
@@ -440,7 +447,7 @@
       selectedSquareDiv.style.backgroundColor = "#edbdc2";
     }
     function getRoute() {
-      var output = generateRoute(activeSquareIndex, allowedOOB, priority, waypointNumber, angleEnable, angle22, angle33);
+      var output = generateRoute(activeSquareIndex, allowedOOB, priority, waypointNumber, angleEnable, angle22, angle33, mfOnly);
     }
     async function resetMenu() {
       document.getElementById("menub").style.height = 0;
@@ -490,14 +497,15 @@
     }
     function moveStep() {
       if (currentStep == 1 && activeSquareIndex == -1) return;
+      if (currentStep == 1) mfOnly = document.getElementById("mfbox").checked;
       if (currentStep == 2) waypointNumber = document.getElementById("wpform").value;
       if (currentStep == 3) {
         if (document.getElementById("tp").checked) priority = "tp"; else priority = "dens";
         allowedOOB = document.getElementsByClassName("oobform")[0].value;
         if (document.getElementById("anglecheck").checked) {
           angleEnable = true; 
-          angle22 = document.getElementsById("angle22").value;
-          angle33 = document.getElementsById("angle33").value;
+          angle22 = document.getElementById("angle22").value;
+          angle33 = document.getElementById("angle33").value;
         } else angleEnable = false;
       }
       if (currentStep == 4) return;

@@ -363,10 +363,10 @@ label.anglesettings {
   user-select: text;
 }
 
-/* .routebox {
+.routebox {
   height: 10rem;
   overflow: auto;
-} */
+}
 
 .routestats {
   color: #ffffff;
@@ -425,3 +425,10 @@ label.anglesettings {
   width: 40rem;
   height: 40rem;
 } */
+
+label.mfbox {
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 300;
+  margin-left: 0.5rem;
+}
