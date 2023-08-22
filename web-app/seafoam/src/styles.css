@@ -295,3 +295,15 @@ label.anglesettings {
   font-weight: 300;
   user-select: text;
 }
+
+.routebox {
+  height: 10rem;
+  overflow: auto;
+}
+
+.routestats {
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 300;
+  margin-top: 1rem;
+}

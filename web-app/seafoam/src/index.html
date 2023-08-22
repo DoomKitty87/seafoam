@@ -127,7 +127,8 @@
             <h3 class="infodesc">Your route is being generated. Please wait.</h3>
           </div>
           <div class="routeresults">
-            <p class="routeoutput">Route loading...</p>
+            <div class="routebox"><p id="routeout" class="routeoutput">Route loading...</p></div>
+            <h3 id="routestats" class="routestats"></h3>
           </div>
         </div>
       </div>
@@ -206,7 +207,8 @@
       var highestDensityDist = Infinity;
       console.log(padCoords.length / 3);
       for (var i = 0; i < padCoords.length / 3; i++) {
-        console.log(`Generating route... ${Math.floor(i / (padCoords.length / 3) * 100)}%`);
+        //console.log(`Generating route... ${Math.floor(i / (padCoords.length / 3) * 100)}%`);
+        //document.getElementById("routeout").innerHTML = `Generating route... ${Math.floor(i / (padCoords.length / 3) * 100)}%`;
         const path = [];
         path.push(padCoords[i * 3]);
         path.push(padCoords[i * 3 + 1]);
@@ -235,7 +237,6 @@
             //Include settable angle weighting later
 
             weight = angleWeight * (Math.pow(dist, 2) + Math.pow(startdist, 1 * ((usedPads.length + 1) / desiredPathLength))) / ((gemDensity - 44) * 4);
-            if (weight == Infinity) console.log("Infinity");
             if (dist > 62) weight = Infinity;
 
             weightChart.push(weight);
@@ -307,11 +308,11 @@
           }
 
           if (lowestWeight == Infinity) {
-            console.log("Route blocked.");
+            //console.log("Route blocked.");
             break;
           }
           if (lowestIndex == i) {
-            console.log("Route complete.");
+            //console.log("Route complete.");
             done = true;
             break;
           }
@@ -340,7 +341,7 @@
           highestDensityPath = path;
           highestDensityDist = avgDist;
         }
-        console.log(path.length / 3, density, avgDist);
+        //console.log(path.length / 3, density, avgDist);
       }
       //Choose between density and dist in settings as well though
       var outPath = [];
@@ -362,8 +363,9 @@
         if (i != outPath.length / 3 - 1) pathOutput += ",";
       }
       pathOutput += "]";
-      document.getElementsByClassName("routeoutput")[0].innerHTML = pathOutput;
+      document.getElementById("routeout").innerHTML = pathOutput;
       console.log(outPath.length / 3, outPathDensity, outPathDist);
+      document.getElementById("routestats").innerHTML = `Waypoints: ${outPath.length / 3}<br>Density: ${outPathDensity}<br>Distance: ${outPathDist}`;
       return pathOutput, outPath.length / 3, outPathDensity, outPathDist;
     }
     var activeSquare = -1;
