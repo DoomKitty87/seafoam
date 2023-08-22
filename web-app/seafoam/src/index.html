@@ -134,6 +134,8 @@
     </div>
   <script>
     async function generateRoute(sector, allowedOOB, priority, waypointCount) {
+      allowedOOB = parseInt(allowedOOB);
+      waypointCount = parseInt(waypointCount);
       const readTextFile = window.__TAURI__.fs.readTextFile;
       const resolveResource = window.__TAURI__.path.resolveResource;
       const padPath = await resolveResource('assets/padsv3.txt')
@@ -187,6 +189,7 @@
       const desiredPathLength = waypointCount;
       const padCoords = [];
       const secDensities = [];
+      console.log(sectors[sector][0] + allowedOOB, sectors[sector][2] - allowedOOB, sectors[sector][1] - allowedOOB, sectors[sector][3] + allowedOOB)
       for (var i = 0; i < overallPads.length / 3; i++) {
         if (overallPads[i * 3] <= sectors[sector][0] + allowedOOB && overallPads[i * 3] > sectors[sector][2] - allowedOOB && overallPads[i * 3 + 2] >= sectors[sector][1] - allowedOOB && overallPads[i * 3 + 2] < sectors[sector][3] + allowedOOB) {
           padCoords.push(overallPads[i * 3]);
@@ -264,7 +267,7 @@
               lowestIndex = j;
             }
           }
-          var blocked = true;
+          var blocked = false;
           while (blocked) {
             blocked = false;
             const headx = path[path.length - 3];
@@ -289,7 +292,7 @@
                 lowestWeight = Infinity;
                 lowestIndex = -1;
                 for (var k = 0; k < weightChart.length; k++) {
-                  if (j == i && path.length == 6) continue;
+                  if (k == i && path.length == 6) continue;
                   if (weightChart[k] < lowestWeight) {
                     lowestWeight = weightChart[k];
                     lowestIndex = k;
@@ -302,8 +305,12 @@
             if (lowestWeight == Infinity) break;
           }
 
-          if (lowestWeight == Infinity) break;
+          if (lowestWeight == Infinity) {
+            console.log("Route blocked.");
+            break;
+          }
           if (lowestIndex == i) {
+            console.log("Route complete.");
             done = true;
             break;
           }
@@ -332,6 +339,7 @@
           highestDensityPath = path;
           highestDensityDist = avgDist;
         }
+        console.log(path.length / 3, density, avgDist);
       }
       //Choose between density and dist in settings as well though
       var outPath = [];
@@ -353,8 +361,9 @@
         if (i != outPath.length / 3 - 1) pathOutput += ",";
       }
       pathOutput += "]";
-
-      return pathOutput, outPath.length, outPathDensity, outPathDist;
+      document.getElementsByClassName("routeoutput")[0].innerHTML = pathOutput;
+      console.log(outPath.length / 3, outPathDensity, outPathDist);
+      return pathOutput, outPath.length / 3, outPathDensity, outPathDist;
     }
     var activeSquare = -1;
     var currentStep = 1;
@@ -378,9 +387,8 @@
       activeSquare = parseInt(indx);
       document.getElementById(indx).style.backgroundColor = "#ffffff";
     }
-    async function getRoute() {
+    function getRoute() {
       var output = generateRoute(activeSquare, allowedOOB, priority, waypointNumber);
-      //document.getElementsByClassName("routeoutput")[0].innerHTML = output[0];
     }
     async function resetMenu() {
       document.getElementById("menua" + (currentStep)).style.opacity = 0;
