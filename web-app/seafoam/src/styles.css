@@ -363,10 +363,10 @@ label.anglesettings {
   user-select: text;
 }
 
-.routebox {
-  /* height: 10rem; */
-  /* overflow: auto; */
-}
+/* .routebox {
+  height: 10rem;
+  overflow: auto;
+} */
 
 .routestats {
   color: #ffffff;
