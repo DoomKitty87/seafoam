@@ -33,39 +33,39 @@
             <img class="map" src="assets/map.png">
             <div class="xaxis">
               <div class="yaxis">
-                <div class="mapsquare" id="20" onclick="setSquare(20)"></div>
-                <div class="mapsquare" id="21" onclick="setSquare(21)"></div>
-                <div class="mapsquare" id="22" onclick="setSquare(22)"></div>
-                <div class="mapsquare" id="23" onclick="setSquare(23)"></div>
-                <div class="mapsquare" id="24" onclick="setSquare(24)"></div>
+                <div class="mapsquare" id="20" onclick="selectSquare(20)"></div>
+                <div class="mapsquare" id="21" onclick="selectSquare(21)"></div>
+                <div class="mapsquare" id="22" onclick="selectSquare(22)"></div>
+                <div class="mapsquare" id="23" onclick="selectSquare(23)"></div>
+                <div class="mapsquare" id="24" onclick="selectSquare(24)"></div>
               </div>
               <div class="yaxis">
-                <div class="mapsquare" id="15" onclick="setSquare(15)"></div>
-                <div class="mapsquare" id="16" onclick="setSquare(16)"></div>
-                <div class="mapsquare" id="17" onclick="setSquare(17)"></div>
-                <div class="mapsquare" id="18" onclick="setSquare(18)"></div>
-                <div class="mapsquare" id="19" onclick="setSquare(19)"></div>
+                <div class="mapsquare" id="15" onclick="selectSquare(15)"></div>
+                <div class="mapsquare" id="16" onclick="selectSquare(16)"></div>
+                <div class="mapsquare" id="17" onclick="selectSquare(17)"></div>
+                <div class="mapsquare" id="18" onclick="selectSquare(18)"></div>
+                <div class="mapsquare" id="19" onclick="selectSquare(19)"></div>
               </div>
               <div class="yaxis">
-                <div class="mapsquare" id="10" onclick="setSquare(10)"></div>
-                <div class="mapsquare" id="11" onclick="setSquare(11)"></div>
+                <div class="mapsquare" id="10" onclick="selectSquare(10)"></div>
+                <div class="mapsquare" id="11" onclick="selectSquare(11)"></div>
                 <div class="mapsquare" style="opacity: 0"></div>
-                <div class="mapsquare" id="13" onclick="setSquare(13)"></div>
-                <div class="mapsquare" id="14" onclick="setSquare(14)"></div>
+                <div class="mapsquare" id="13" onclick="selectSquare(13)"></div>
+                <div class="mapsquare" id="14" onclick="selectSquare(14)"></div>
               </div>
               <div class="yaxis">
-                <div class="mapsquare" id="5" onclick="setSquare(5)"></div>
-                <div class="mapsquare" id="6" onclick="setSquare(6)"></div>
-                <div class="mapsquare" id="7" onclick="setSquare(7)"></div>
-                <div class="mapsquare" id="8" onclick="setSquare(8)"></div>
-                <div class="mapsquare" id="9" onclick="setSquare(9)"></div>
+                <div class="mapsquare" id="5" onclick="selectSquare(5)"></div>
+                <div class="mapsquare" id="6" onclick="selectSquare(6)"></div>
+                <div class="mapsquare" id="7" onclick="selectSquare(7)"></div>
+                <div class="mapsquare" id="8" onclick="selectSquare(8)"></div>
+                <div class="mapsquare" id="9" onclick="selectSquare(9)"></div>
               </div>
               <div class="yaxis">
-                <div class="mapsquare" id="0" onclick="setSquare(0)"></div>
-                <div class="mapsquare" id="1" onclick="setSquare(1)"></div>
-                <div class="mapsquare" id="2" onclick="setSquare(2)"></div>
-                <div class="mapsquare" id="3" onclick="setSquare(3)"></div>
-                <div class="mapsquare" id="4" onclick="setSquare(4)"></div>
+                <div class="mapsquare" id="0" onclick="selectSquare(0)"></div>
+                <div class="mapsquare" id="1" onclick="selectSquare(1)"></div>
+                <div class="mapsquare" id="2" onclick="selectSquare(2)"></div>
+                <div class="mapsquare" id="3" onclick="selectSquare(3)"></div>
+                <div class="mapsquare" id="4" onclick="selectSquare(4)"></div>
               </div>
             </div>
           </div>
@@ -408,12 +408,13 @@
     document.getElementById("menua1").style.opacity = 1;
     document.getElementById("menua1").style.display = "block";
 
-    function setSquare(indx) {
-      if (activeSquare != -1) {
-        document.getElementById(activeSquare).style.backgroundColor = "#0e141b";
+    function selectSquare(index) {
+      if (selectedSquareIndex != -1) {
+        document.getElementById(selectedSquareIndex).style.backgroundColor = "#0e141b";
       }
-      activeSquare = parseInt(indx);
-      document.getElementById(indx).style.backgroundColor = "#ffffff";
+      selectedSquareIndex = parseInt(index);
+      let selectedSquareDiv = document.getElementById(index);
+      selectedSquareDiv.style.backgroundColor = "#edbdc2";
     }
     function getRoute() {
       var output = generateRoute(activeSquare, allowedOOB, priority, waypointNumber, angleEnable, angle22, angle33);
@@ -461,7 +462,7 @@
       document.getElementById("menub1").style.opacity = 1;
     }
     function moveStep() {
-      if (currentStep == 1 && activeSquare == -1) return;
+      if (currentStep == 1 && selectedSquareIndex == -1) return;
       if (currentStep == 2) waypointNumber = document.getElementById("wpform").value;
       if (currentStep == 3) {
         if (document.getElementById("tp").checked) priority = "tp"; else priority = "dens";
