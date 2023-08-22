@@ -333,7 +333,7 @@
             const xdist = tailx - headx;
             const ydist = taily - heady;
             const zdist = tailz - headz;
-            const interval = Math.floor(Math.sqrt(xdist * xdist + ydist * ydist + zdist * zdist));
+            const interval = xdist + ydist + zdist;
             for (var j = 1; j < interval; j++) {
               const x = Math.round(headx + j * xdist / interval);
               const y = Math.round(heady + j * ydist / interval);
