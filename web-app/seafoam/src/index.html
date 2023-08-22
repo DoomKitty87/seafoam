@@ -89,17 +89,36 @@
           <div class="infobox">
             <h1 class="infotitle">SETTINGS</h1>
           </div>
-          <div class="prioritychoice">
+          <div class="settingbox">
             <h2 class="settingdesc">Choose priority for teleport distance or density for route output.</h2>
             <form>
-              <input class="priorityform" id="tp" type="radio" value="TP">
+              <input class="priorityform" id="tp" type="radio" value="TP" name="priority">
               <label class="priorityform" for="tp">TP Distance</label>
               <br>
-              <input class="priorityform" id="dens" type="radio" value="DENS">
+              <input class="priorityform" id="dens" type="radio" value="DENS" name="priority">
               <label class="priorityform" for="dens">Density</label>
             </form>
           </div>
-          <div class="nextbutton">
+          <div class="settingbox">
+            <h2 class="settingdesc">Set allowed out of bounds range from the 8x8 chunk area (only use if you know what that means).</h2>
+            <form>
+              <input class="oobform" type="number" value="0">
+            </form>
+          </div>
+          <div class="settingbox">
+            <h2 class="settingdesc">Preference for approach/exit angle difference on a teleport pad.</h2>
+            <form>
+              <input class="angleenable" type="checkbox" id="anglecheck">
+              <label class="angleenable" for="anglecheck">Enable</label>
+              <br><br>
+              <input class="anglesettings" type="number" value="0" id="angle22">
+              <label class="anglesettings" for="angle22">2x2 Veins</label>
+              <br><br>
+              <input class="anglesettings" type="number" value="0" id="angle33">
+              <label class="anglesettings" for="angle33">3x3 Veins</label>
+            </form>
+          </div>
+          <div class="nextbutton" style="margin-top: 2rem">
             <h2 class="nextbuttontext" onclick="moveStep()">NEXT &#8594</h2>
           </div>
         </div>
@@ -110,6 +129,13 @@
     var currentStep = 1;
 
     var waypointNumber = 150;
+
+    var priority = "TP";
+    var allowedOOB = 0;
+
+    var angleEnable = false;
+    var angle22 = 0;
+    var angle33 = 0;
 
     document.getElementById("menua1").style.opacity = 1;
     document.getElementById("menua1").style.display = "block";
@@ -135,6 +161,15 @@
     function moveStep() {
       if (currentStep == 1 && activeSquare == -1) return;
       if (currentStep == 2) waypointNumber = document.getElementById("wpform").value;
+      if (currentStep == 3) {
+        if (document.getElementById("tp").checked) priority = "TP"; else priority = "DENS";
+        allowedOOB = document.getElementsByClassName("oobform")[0].value;
+        if (document.getElementById("anglecheck").checked) {
+          angleEnable = true; 
+          angle22 = document.getElementsById("angle22").value;
+          angle33 = document.getElementsById("angle33").value;
+        } else angleEnable = false;
+      }
       currentStep++;
       updateMenu(currentStep);
     }

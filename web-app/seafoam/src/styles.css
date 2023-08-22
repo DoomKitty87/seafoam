@@ -201,7 +201,7 @@ body {
   margin: 0;
 }
 
-.prioritychoice {
+.settingbox {
   position: relative;
   left: 20rem;
   width: 40rem;
@@ -220,4 +220,64 @@ body {
   font-size: 1rem;
   font-weight: 300;
   color: #ffffff;
+}
+
+.oobform {
+  background-color: #131b23;
+  height: 1.5rem;
+  width: 5rem;
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 300;
+  font-family: "Poppins";
+}
+
+.oobform::-webkit-outer-spin-button,
+.oobform::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input.angleenable:checked {
+  background-color: #ffffff;
+}
+
+label.angleenable {
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 300;
+  margin-left: 0.5rem;
+  position: relative;
+  bottom: 0.2rem;
+}
+
+input.angleenable {
+  background-color: #131b23;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+input.anglesettings {
+  background-color: #131b23;
+  height: 1.5rem;
+  width: 5rem;
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 300;
+  font-family: "Poppins";
+}
+
+input.anglesettings::-webkit-outer-spin-button,
+input.anglesettings::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+label.anglesettings {
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 300;
+  margin-left: 0.5rem;
+  position: relative;
+  bottom: 0.2rem;
 }
