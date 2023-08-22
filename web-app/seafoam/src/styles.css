@@ -1,5 +1,12 @@
+@font-face {
+  font-family: "Poppins";
+  src: url(assets/poppins.ttf) format("truetype");
+}
+
 body {
+  user-select: none;
   background-color: #162532;
+  font-family: "Poppins";
 }
 
 .navbar {
@@ -9,4 +16,163 @@ body {
   top: 0;
   height: 100vh;
   width: 15rem;
+  text-align: center;
+}
+
+.icon {
+  margin-top: 1.5rem;
+  width: 6rem;
+}
+
+.title {
+  color: #ffffff;
+  margin-top: 0;
+  font-weight: 200;
+  padding-bottom: 3rem;
+}
+
+.menuscreen {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.menubutton {
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  width: 100%;
+  height: 5rem;
+  font-size: 0.7rem;
+  color: #ffffff;
+  background-color: #131b23;
+  transition: background-color 0.25s;
+}
+
+.buttontext {
+  margin-left: 3rem;
+  font-weight: 200;
+}
+
+.menubutton:hover {
+  background-color: #0e141b;
+}
+
+.progressbar {
+  margin-top: 2rem;
+  position: relative;
+  left: 40%;
+  width: 30rem;
+}
+
+.progressitem {
+  margin: 1.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #404040;
+  display: inline-block;
+}
+
+.progressitem[data-active="true"] {
+  color: #ffffff;
+}
+
+.dot {
+  height: .8rem;
+  width: .8rem;
+  background-color: #404040;
+  border-radius: 50%;
+  display: block;
+  margin: 0.5rem auto auto auto;
+  transition: background-color 0.25s transform 0.25s;
+  transform: scale(0.5);
+}
+
+.dot[data-active="true"] {
+  transform: scale(0.8);
+  background-color: #ffffff;
+}
+
+.infobox {
+  width: 20rem;
+  position: relative;
+  left: 20rem;
+  margin-top: 10rem;
+}
+
+.infotitle {
+  font-size: 3rem;
+  font-weight: 500;
+  color: #ffffff;
+  margin-top: 1rem;
+  margin-bottom: 0;
+}
+
+.infodesc {
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: #ffffff;
+}
+
+.nextbutton {
+  position: relative;
+  left: 20rem;
+  margin-top: 10rem;
+  transition: background-color 0.1s;
+  width: fit-content;
+  padding: 0 1rem 0 1rem;
+}
+
+.nextbutton:hover {
+  background-color: #0e141b;
+}
+
+.nextbuttontext {
+  color: #ffffff;
+  font-weight: 200;
+}
+
+.mapbox {
+  position: absolute;
+  left: 75rem;
+  bottom: 15rem;
+  width: 30rem;
+  height: 30rem;
+  padding: 1rem 1rem 1rem 1rem;
+  background-color: #1f2d3a;
+  align-items: center;
+}
+
+.map {
+  width: 30rem;
+}
+
+.xaxis {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  position: relative;
+  bottom: 30.45rem;
+}
+
+.yaxis {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+}
+
+.mapsquare {
+  display: flex;
+  width: 5.8rem;
+  height: 5.8rem;
+  background-color: #0e141b;
+  display: inline-block;
+  margin: 0.1rem;
+  opacity: 0.4;
+  transition: opacity 0.2s;
+}
+
+.mapsquare:hover {
+  opacity: 0.7;
 }
