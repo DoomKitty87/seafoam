@@ -3,103 +3,165 @@
   src: url(assets/poppins.ttf) format("truetype");
 }
 
+:root {
+  --main-bg-color: #295d8c;
+  --accent-bg-color: #427baf;
+  --button-bg-color: #427baf;
+}
+
+html {
+  height: 100%;
+}
+
 body {
   user-select: none;
-  background-color: #162532;
+  background-color: var(--main-bg-color);
   font-family: "Poppins";
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+#navbarandmaincontainer {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  height: 100%;
+}
+
+.main {
+  flex-grow: 1;
 }
 
 .navbar {
+  display: flex;
+  flex-flow: column;
+  align-items: left;
+  justify-content: flex-start;
   background-color: #131b23;
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100vh;
-  width: 15rem;
+  min-height: 60rem;
   text-align: center;
+  box-shadow: 1px 0px 10px 3px rgba(0, 0, 0, 0.511);
 }
 
 .icon {
-  margin-top: 1.5rem;
-  width: 6rem;
+  width: 4rem;
 }
 
 .title {
+  display: flex;
   color: #ffffff;
-  margin-top: 0;
   font-weight: 200;
-  padding-bottom: 3rem;
+  margin: 0;
 }
 
-.menuscreen {
-  display: none;
-  opacity: 0;
-  transition: opacity 0.5s;
+.logocontainer {
+  display: flex;
+}
+
+.logo {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem;
+  margin-bottom: 5rem;
 }
 
 .menubutton {
   display: flex;
-  align-items: center;
+  flex-flow: row;
   justify-content: left;
-  width: 100%;
+  align-items: center;
   height: 5rem;
   font-size: 0.7rem;
   color: #ffffff;
   background-color: #131b23;
   transition: background-color 0.25s;
+  padding-left: 2rem;
 }
 
 .buttontext {
-  margin-left: 3rem;
   font-weight: 200;
 }
 
+.menucontainer {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  height: 100%;
+}
+
+.menuscreen {
+  display: none;
+  flex-flow: row;
+  justify-content: flex-start;
+  align-items: center;
+  flex-grow: 1;
+  width: 100%;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
 .menubutton:hover {
-  background-color: #0e141b;
+  background-color: var(--button-bg-color);
 }
 
 .progressbar {
-  margin-top: 2rem;
-  position: relative;
-  left: 40%;
   width: 30rem;
   transition: opacity 0.5s;
+  margin: 0;
 }
 
 .progressitem {
   margin: 1.5rem;
   font-size: 0.75rem;
   font-weight: 500;
-  color: #404040;
+  color: #ffffff;
   display: inline-block;
-  transition: color 0.25s;
+  opacity: 0.3;
+  transition: opacity 0.25s;
 }
 
 .progressitem[data-active="true"] {
-  color: #ffffff;
+  opacity: 1;
 }
 
 .dot {
   height: .8rem;
   width: .8rem;
-  background-color: #404040;
+  background-color: #ffffff;
   border-radius: 50%;
   display: block;
   margin: 0.5rem auto auto auto;
-  transition: background-color 0.25s transform 0.25s;
+  transition: opacity 0.25s;
+  transition: transform 0.5s;
   transform: scale(0.5);
+  opacity: 0.3;
 }
 
 .dot[data-active="true"] {
   transform: scale(0.8);
-  background-color: #ffffff;
+  opacity: 1;
+}
+
+.lefttextcontainer {
+  display: inline-block;
+  flex-grow: 1;
+  margin: 5rem;
+}
+
+.rightcontentcontainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  flex-grow: 2;
+  margin: 5rem;
 }
 
 .infobox {
   width: 20rem;
-  position: relative;
-  left: 20rem;
-  margin-top: 10rem;
 }
 
 .infotitle {
@@ -117,16 +179,14 @@ body {
 }
 
 .nextbutton {
-  position: relative;
-  left: 20rem;
-  margin-top: 10rem;
+  margin-top: 5rem;
   transition: background-color 0.1s;
   width: fit-content;
-  padding: 0 1rem 0 1rem;
+  padding: 0 1rem 0 0;
 }
 
 .nextbutton:hover {
-  background-color: #0e141b;
+  background-color: var(--button-bg-color);
 }
 
 .nextbuttontext {
@@ -135,18 +195,18 @@ body {
 }
 
 .mapbox {
-  position: absolute;
-  left: 75rem;
-  bottom: 15rem;
-  width: 30rem;
-  height: 30rem;
+  display: inline-block;
+  width: 40rem;
+  height: 40rem;
   padding: 1rem 1rem 1rem 1rem;
-  background-color: #1f2d3a;
+  background-color: var(--accent-bg-color);
   align-items: center;
+  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.142);
 }
 
-.map {
-  width: 30rem;
+#mapimage {
+  opacity: 0.8;
+  width: 40rem;
 }
 
 .xaxis {
@@ -154,7 +214,7 @@ body {
   align-items: center;
   margin: 0;
   position: relative;
-  bottom: 30.45rem;
+  bottom: 40.45rem;
 }
 
 .yaxis {
@@ -169,9 +229,9 @@ body {
   justify-content: center;
   align-content: center;
   flex-direction: column;
-  width: 5.8rem;
-  height: 5.8rem;
-  background-color: #0e141b;
+  width: 7.8rem;
+  height: 7.8rem;
+  background-color: rgba(1, 1, 2, 0.665);
   margin: 0.1rem;
   opacity: 0.5;
   transition: opacity 0.2s;
@@ -190,20 +250,19 @@ body {
 }
 
 .waypointentry {
-  position: relative;
-  left: 20rem;
   margin-top: 2rem;
   width: 40rem;
 }
 
 .waypointform {
-  background-color: #131b23;
+  background-color: var(--accent-bg-color);
   height: 2rem;
   width: 7rem;
   color: #ffffff;
   font-size: 1.2rem;
   font-weight: 300;
   font-family: "Poppins";
+  border: none;
 }
 
 .waypointform::-webkit-outer-spin-button,
@@ -213,8 +272,6 @@ body {
 }
 
 .settingbox {
-  position: relative;
-  left: 20rem;
   width: 40rem;
 }
 
@@ -223,6 +280,7 @@ body {
   font-size: 1.2rem;
   font-weight: 300;
   margin-right: 1rem;
+  border: none;
 }
 
 .settingdesc {
@@ -234,13 +292,14 @@ body {
 }
 
 .oobform {
-  background-color: #131b23;
+  background-color: var(--accent-bg-color);
   height: 1.5rem;
   width: 5rem;
   color: #ffffff;
   font-size: 1.2rem;
   font-weight: 300;
   font-family: "Poppins";
+  border: none;
 }
 
 .oobform::-webkit-outer-spin-button,
@@ -263,13 +322,13 @@ label.angleenable {
 }
 
 input.angleenable {
-  background-color: #131b23;
+  background-color: var(--accent-bg-color);
   height: 1.5rem;
   width: 1.5rem;
 }
 
 input.anglesettings {
-  background-color: #131b23;
+  background-color: var(--accent-bg-color);
   height: 1.5rem;
   width: 5rem;
   color: #ffffff;
@@ -294,9 +353,6 @@ label.anglesettings {
 }
 
 .routeresults {
-  position: relative;
-  left: 20rem;
-  margin-top: 2rem;
   width: 40rem;
 }
 
@@ -308,8 +364,8 @@ label.anglesettings {
 }
 
 .routebox {
-  height: 10rem;
-  overflow: auto;
+  /* height: 10rem; */
+  /* overflow: auto; */
 }
 
 .routestats {
@@ -320,9 +376,9 @@ label.anglesettings {
 }
 
 .routesinfo {
-  position: relative;
+  /* position: relative;
   left: 20rem;
-  width: 40rem;
+  width: 40rem; */
   margin-top: 5rem;
 }
 
@@ -330,8 +386,8 @@ label.anglesettings {
   font-size: 3rem;
   font-weight: 500;
   color: #ffffff;
-  margin-top: 1rem;
-  margin-bottom: 0;
+  /* margin-top: 1rem;
+  margin-bottom: 0; */
 }
 
 .routesdesc {
@@ -340,32 +396,32 @@ label.anglesettings {
   color: #ffffff;
 }
 
-.routeviewbox {
+/* .routeviewbox {
   position: relative;
   left: 20rem;
   width: 50rem;
   height: 40rem;
   overflow: auto;
-}
+} */
 
 .routetitle {
   font-size: 1.5rem;
   font-weight: 500;
   color: #ffffff;
-  margin-top: 1rem;
-  margin-bottom: 0;
+  /* margin-top: 1rem;
+  margin-bottom: 0; */
 }
 
 .route {
   width: 40rem;
   padding: 1rem;
   margin-top: 2rem;
-  background-color: #0e141b;
+  background-color: var(--accent-bg-color);
 }
 
-.routeviewer {
+/* .routeviewer {
   position: absolute;
   left: 50rem;
   width: 40rem;
   height: 40rem;
-}
+} */

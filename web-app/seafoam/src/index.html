@@ -7,145 +7,167 @@
     <title>Seafoam</title>
   </head>
   <body>
-    <div class="navbar"> 
-      <img class="icon" src="assets/seafoamarmadillo.webp">
-      <h1 class="title">seafoam</h1>
-      <div class="menubutton" onclick="resetMenu()"><h2 class="buttontext">GENERATE</h2></div>
-      <div class="menubutton" onclick="routeMenu()""><h2 class="buttontext">ROUTES</h2></div>
-    </div>
-    <div class="main">
-      <div class="menua">
-        <ul class="progressbar">
-          <li class="progressitem" data-active="true">MAP ZONE<span class="dot" data-active="true"></span></li>
-          <li class="progressitem" data-active="false">WAYPOINTS<span class="dot"></span></li>
-          <li class="progressitem" data-active="false">SETTINGS<span class="dot" data-active="false"></span></li>
-          <li class="progressitem" data-active="false">GENERATE<span class="dot" data-active="false"></span></li>
-        </ul>
-        <div class="menuscreen" id="menua1">
-          <div class="infobox">
-            <h1 class="infotitle">ROUTE AREA</h1>
-            <h3 class="infodesc">Click to choose the area where your route will generate.</h3>
-          </div>
-          <div class="nextbutton">
-            <h2 class="nextbuttontext" onclick="moveStep()">NEXT &#8594</h2>
-          </div>
-          <div class="mapbox">
-            <img class="map" src="assets/map.png">
-            <div class="xaxis">
-              <div class="yaxis">
-                <div class="mapsquare" id="20" onclick="selectSquare(20)"></div>
-                <div class="mapsquare" id="21" onclick="selectSquare(21)"></div>
-                <div class="mapsquare" id="22" onclick="selectSquare(22)"></div>
-                <div class="mapsquare" id="23" onclick="selectSquare(23)"></div>
-                <div class="mapsquare" id="24" onclick="selectSquare(24)"></div>
-              </div>
-              <div class="yaxis">
-                <div class="mapsquare" id="15" onclick="selectSquare(15)"></div>
-                <div class="mapsquare" id="16" onclick="selectSquare(16)"></div>
-                <div class="mapsquare" id="17" onclick="selectSquare(17)"></div>
-                <div class="mapsquare" id="18" onclick="selectSquare(18)"></div>
-                <div class="mapsquare" id="19" onclick="selectSquare(19)"></div>
-              </div>
-              <div class="yaxis">
-                <div class="mapsquare" id="10" onclick="selectSquare(10)"></div>
-                <div class="mapsquare" id="11" onclick="selectSquare(11)"></div>
-                <div class="mapsquare" style="opacity: 0"></div>
-                <div class="mapsquare" id="13" onclick="selectSquare(13)"></div>
-                <div class="mapsquare" id="14" onclick="selectSquare(14)"></div>
-              </div>
-              <div class="yaxis">
-                <div class="mapsquare" id="5" onclick="selectSquare(5)"></div>
-                <div class="mapsquare" id="6" onclick="selectSquare(6)"></div>
-                <div class="mapsquare" id="7" onclick="selectSquare(7)"></div>
-                <div class="mapsquare" id="8" onclick="selectSquare(8)"></div>
-                <div class="mapsquare" id="9" onclick="selectSquare(9)"></div>
-              </div>
-              <div class="yaxis">
-                <div class="mapsquare" id="0" onclick="selectSquare(0)"></div>
-                <div class="mapsquare" id="1" onclick="selectSquare(1)"></div>
-                <div class="mapsquare" id="2" onclick="selectSquare(2)"></div>
-                <div class="mapsquare" id="3" onclick="selectSquare(3)"></div>
-                <div class="mapsquare" id="4" onclick="selectSquare(4)"></div>
-              </div>
-            </div>
+    <div id="navbarandmaincontainer">
+      <div class="navbar">
+        <div class="logocontainer">
+          <div class="logo">
+            <img class="icon" src="assets/seafoamarmadillo.webp">
+            <h1 class="title">seafoam</h1>
           </div>
         </div>
-        <div class="menuscreen" id="menua2">
-          <div class="infobox">
-            <h1 class="infotitle">WAYPOINTS</h1>
-            <h3 class="infodesc">Enter desired waypoints- route may be +-10% of the value.</h3>
-          </div>
-          <div class="waypointentry">
-            <form>
-              <input id="wpform" class="waypointform" type="number" value="150">
-            </form>
-          </div>
-          <div class="nextbutton">
-            <h2 class="nextbuttontext" onclick="moveStep()">NEXT &#8594</h2>
-          </div>
-        </div>
-        <div class="menuscreen" id="menua3">
-          <div class="infobox">
-            <h1 class="infotitle">SETTINGS</h1>
-          </div>
-          <div class="settingbox">
-            <h2 class="settingdesc">Choose priority for teleport distance or density for route output.</h2>
-            <form>
-              <input class="priorityform" id="tp" type="radio" value="TP" name="priority">
-              <label class="priorityform" for="tp">TP Distance</label>
-              <br>
-              <input class="priorityform" id="dens" type="radio" value="DENS" name="priority">
-              <label class="priorityform" for="dens">Density</label>
-            </form>
-          </div>
-          <div class="settingbox">
-            <h2 class="settingdesc">Set allowed out of bounds range from the 8x8 chunk area (only use if you know what that means).</h2>
-            <form>
-              <input class="oobform" type="number" value="0">
-            </form>
-          </div>
-          <div class="settingbox">
-            <h2 class="settingdesc">Preference for approach/exit angle difference on a teleport pad.</h2>
-            <form>
-              <input class="angleenable" type="checkbox" id="anglecheck">
-              <label class="angleenable" for="anglecheck">Enable</label>
-              <br><br>
-              <input class="anglesettings" type="number" value="0" id="angle22">
-              <label class="anglesettings" for="angle22">2x2 Veins</label>
-              <br><br>
-              <input class="anglesettings" type="number" value="0" id="angle33">
-              <label class="anglesettings" for="angle33">3x3 Veins</label>
-            </form>
-          </div>
-          <div class="nextbutton" style="margin-top: 2rem">
-            <h2 class="nextbuttontext" onclick="moveStep()">GENERATE</h2>
-          </div>
-        </div>
-        <div class="menuscreen" id="menua4">
-          <div class="infobox">
-            <h1 class="infotitle">GENERATE</h1>
-            <h3 class="infodesc">Your route is being generated. Please wait.</h3>
-          </div>
-          <div class="routeresults">
-            <div class="routebox"><p id="routeout" class="routeoutput">Route loading...</p></div>
-            <h3 id="routestats" class="routestats"></h3>
-          </div>
-        </div>
+        <div class="menubutton" onclick="resetMenu()"><h2 class="buttontext">GENERATE</h2></div>
+        <div class="menubutton" onclick="routeMenu()""><h2 class="buttontext">ROUTES</h2></div>
       </div>
-      <div class="menub">
-        <div class="menuscreen" id="menub1">
-          <div class="routesinfo">
-            <div class="routeviewer">
-              <h2 id="routeviewerstats" class="routestats"></h2>
-              <div class="routebox"><p id="routeviewerpath" class="routeoutput"></p></div>
+      <div class="main">
+        <div class="menucontainer" id="menua">
+          <ul class="progressbar">
+            <li class="progressitem" data-active="true">MAP ZONE<span class="dot" data-active="true"></span></li>
+            <li class="progressitem" data-active="false">WAYPOINTS<span class="dot"></span></li>
+            <li class="progressitem" data-active="false">SETTINGS<span class="dot" data-active="false"></span></li>
+            <li class="progressitem" data-active="false">GENERATE<span class="dot" data-active="false"></span></li>
+          </ul>
+          <div class="menuscreen" id="menua1">
+            <div class="lefttextcontainer">
+              <div class="infobox">
+                <h1 class="infotitle">ROUTE AREA</h1>
+                <h3 class="infodesc">Click to choose the area where your route will generate.</h3>
+              </div>
+              <div class="nextbutton">
+                <h2 class="nextbuttontext" onclick="moveStep()">NEXT &#8594</h2>
+              </div>
             </div>
-            <h1 class="routestitle">ROUTES</h1>
-            <h3 class="routesdesc">Click on a saved route to view it.</h3>
+            <div class="rightcontentcontainer">
+              <div class="mapbox">
+                <img id="mapimage" src="assets/map.png">
+                <div class="xaxis">
+                  <div class="yaxis">
+                    <div class="mapsquare" id="20" onclick="selectSquare(20)"></div>
+                    <div class="mapsquare" id="21" onclick="selectSquare(21)"></div>
+                    <div class="mapsquare" id="22" onclick="selectSquare(22)"></div>
+                    <div class="mapsquare" id="23" onclick="selectSquare(23)"></div>
+                    <div class="mapsquare" id="24" onclick="selectSquare(24)"></div>
+                  </div>
+                  <div class="yaxis">
+                    <div class="mapsquare" id="15" onclick="selectSquare(15)"></div>
+                    <div class="mapsquare" id="16" onclick="selectSquare(16)"></div>
+                    <div class="mapsquare" id="17" onclick="selectSquare(17)"></div>
+                    <div class="mapsquare" id="18" onclick="selectSquare(18)"></div>
+                    <div class="mapsquare" id="19" onclick="selectSquare(19)"></div>
+                  </div>
+                  <div class="yaxis">
+                    <div class="mapsquare" id="10" onclick="selectSquare(10)"></div>
+                    <div class="mapsquare" id="11" onclick="selectSquare(11)"></div>
+                    <div class="mapsquare" style="opacity: 0"></div>
+                    <div class="mapsquare" id="13" onclick="selectSquare(13)"></div>
+                    <div class="mapsquare" id="14" onclick="selectSquare(14)"></div>
+                  </div>
+                  <div class="yaxis">
+                    <div class="mapsquare" id="5" onclick="selectSquare(5)"></div>
+                    <div class="mapsquare" id="6" onclick="selectSquare(6)"></div>
+                    <div class="mapsquare" id="7" onclick="selectSquare(7)"></div>
+                    <div class="mapsquare" id="8" onclick="selectSquare(8)"></div>
+                    <div class="mapsquare" id="9" onclick="selectSquare(9)"></div>
+                  </div>
+                  <div class="yaxis">
+                    <div class="mapsquare" id="0" onclick="selectSquare(0)"></div>
+                    <div class="mapsquare" id="1" onclick="selectSquare(1)"></div>
+                    <div class="mapsquare" id="2" onclick="selectSquare(2)"></div>
+                    <div class="mapsquare" id="3" onclick="selectSquare(3)"></div>
+                    <div class="mapsquare" id="4" onclick="selectSquare(4)"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="routeviewbox">
-            <!--<div class="route">
-              <h3 class="routetitle">Route title</h3>
-            </div>-->
+          <div class="menuscreen" id="menua2">
+            <div class="lefttextcontainer">
+              <div class="infobox">
+                <h1 class="infotitle">WAYPOINTS</h1>
+                <h3 class="infodesc">Enter desired waypoints- route may be +-10% of the value.</h3>
+              </div>
+              <div class="waypointentry">
+                <form>
+                  <input id="wpform" class="waypointform" type="number" value="150">
+                </form>
+              </div>
+              <div class="nextbutton">
+                <h2 class="nextbuttontext" onclick="moveStep()">NEXT &#8594</h2>
+              </div>
+            </div>
+          </div>
+          <div class="menuscreen" id="menua3">
+            <div class="lefttextcontainer">
+              <div class="infobox">
+                <h1 class="infotitle">SETTINGS</h1>
+              </div>
+              <div class="settingbox">
+                <h2 class="settingdesc">Choose priority for teleport distance or density for route output.</h2>
+                <form>
+                  <input class="priorityform" id="tp" type="radio" value="TP" name="priority">
+                  <label class="priorityform" for="tp">TP Distance</label>
+                  <br>
+                  <input class="priorityform" id="dens" type="radio" value="DENS" name="priority">
+                  <label class="priorityform" for="dens">Density</label>
+                </form>
+              </div>
+              <div class="settingbox">
+                <h2 class="settingdesc">Set allowed out of bounds range from the 8x8 chunk area (only use if you know what that means).</h2>
+                <form>
+                  <input class="oobform" type="number" value="0">
+                </form>
+              </div>
+              <div class="settingbox">
+                <h2 class="settingdesc">Preference for approach/exit angle difference on a teleport pad.</h2>
+                <form>
+                  <input class="angleenable" type="checkbox" id="anglecheck">
+                  <label class="angleenable" for="anglecheck">Enable</label>
+                  <br><br>
+                  <input class="oobform" class="anglesettings" type="number" value="0" id="angle22">
+                  <label class="anglesettings" for="angle22">2x2 Veins</label>
+                  <br><br>
+                  <input class="oobform" class="anglesettings" type="number" value="0" id="angle33">
+                  <label class="anglesettings" for="angle33">3x3 Veins</label>
+                </form>
+              </div>
+              <div class="nextbutton" style="margin-top: 2rem">
+                <h2 class="nextbuttontext" onclick="moveStep()">GENERATE</h2>
+              </div>
+            </div>
+          </div>
+          <div class="menuscreen" id="menua4">
+            <div class="lefttextcontainer">
+              <div class="infobox">
+                <h1 class="infotitle">GENERATE</h1>
+                <h3 class="infodesc">Your route is being generated. Please wait.</h3>
+              </div>
+              <div class="routeresults">
+                <div class="routebox">
+                  <p id="routeout" class="routeoutput">Route loading...</p>
+                </div>
+                <h3 id="routestats" class="routestats"></h3>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="menucontainer" id="menub">
+          <div class="menuscreen" id="menub1">
+            <div class="lefttextcontainer">
+              <div class="routesinfo">
+                <div class="routeviewer">
+                  <h2 id="routeviewerstats" class="routestats"></h2>
+                  <div class="routebox"><p id="routeviewerpath" class="routeoutput"></p></div>
+                </div>
+                <h1 class="routestitle">ROUTES</h1>
+                <h3 class="routesdesc">Click on a saved route to view it.</h3>
+              </div>
+            </div>
+            <div class="rightcontentcontainer">
+              <div class="routeviewbox">
+                <!--<div class="route">
+                  <h3 class="routetitle">Route title</h3>
+                </div>-->
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -393,7 +415,7 @@
       document.getElementById("routestats").innerHTML = `Waypoints: ${outPath.length / 3}<br>Density: ${outPathDensity}<br>Distance: ${outPathDist}`;
       return pathOutput, outPath.length / 3, outPathDensity, outPathDist;
     }
-    var activeSquare = -1;
+    var activeSquareIndex = -1;
     var currentStep = 1;
 
     var waypointNumber = 150;
@@ -406,20 +428,22 @@
     var angle33 = 0;
 
     document.getElementById("menua1").style.opacity = 1;
-    document.getElementById("menua1").style.display = "block";
+    document.getElementById("menua1").style.display = "flex";
+    document.getElementById("menub").style.height = 0;
 
     function selectSquare(index) {
-      if (selectedSquareIndex != -1) {
-        document.getElementById(selectedSquareIndex).style.backgroundColor = "#0e141b";
+      if (activeSquareIndex != -1) {
+        document.getElementById(activeSquareIndex).style.backgroundColor = "#0e141b";
       }
-      selectedSquareIndex = parseInt(index);
+      activeSquareIndex = parseInt(index);
       let selectedSquareDiv = document.getElementById(index);
       selectedSquareDiv.style.backgroundColor = "#edbdc2";
     }
     function getRoute() {
-      var output = generateRoute(activeSquare, allowedOOB, priority, waypointNumber, angleEnable, angle22, angle33);
+      var output = generateRoute(activeSquareIndex, allowedOOB, priority, waypointNumber, angleEnable, angle22, angle33);
     }
     async function resetMenu() {
+      document.getElementById("menub").style.height = 0;
       document.getElementById("menub1").style.opacity = 0;
       document.getElementById("menua" + (currentStep)).style.opacity = 0;
       document.getElementsByClassName("progressitem")[currentStep - 1].setAttribute("data-active", "false");
@@ -428,10 +452,10 @@
       document.getElementById("menub1").style.display = "none";
       document.getElementById("menua" + (currentStep)).style.display = "none";
       currentStep = 1;
-      if (activeSquare != -1) document.getElementById(activeSquare).style.backgroundColor = "#0e141b";
-      activeSquare = -1;
+      if (activeSquareIndex != -1) document.getElementById(activeSquareIndex).style.backgroundColor = "#0e141b";
+      activeSquareIndex = -1;
       document.getElementsByClassName("progressbar")[0].style.opacity = 1;
-      document.getElementById("menua" + (currentStep)).style.display = "block";
+      document.getElementById("menua" + (currentStep)).style.display = "flex";
       document.getElementById("menua" + (currentStep)).style.opacity = 1;
       document.getElementsByClassName("progressitem")[currentStep - 1].setAttribute("data-active", "true");
       document.getElementsByClassName("dot")[currentStep - 1].setAttribute("data-active", "true");
@@ -442,7 +466,8 @@
       document.getElementsByClassName("dot")[step - 2].setAttribute("data-active", "false");
       await new Promise(r => setTimeout(r, 500)); 
       document.getElementById("menua" + (step - 1)).style.display = "none";
-      document.getElementById("menua" + (step)).style.display = "block";
+
+      document.getElementById("menua" + (step)).style.display = "flex";
       document.getElementById("menua" + (step)).style.opacity = 1;
       document.getElementsByClassName("progressitem")[step - 1].setAttribute("data-active", "true");
       document.getElementsByClassName("dot")[step - 1].setAttribute("data-active", "true");
@@ -455,14 +480,16 @@
       document.getElementsByClassName("dot")[currentStep - 1].setAttribute("data-active", "false");
       await new Promise(r => setTimeout(r, 500)); 
       document.getElementById("menua" + (currentStep)).style.display = "none";
+      document.getElementById("menua").style.height = 0;
       currentStep = 1;
-      if (activeSquare != -1) document.getElementById(activeSquare).style.backgroundColor = "#0e141b";
-      activeSquare = -1;
-      document.getElementById("menub1").style.display = "block";
+      if (activeSquareIndex != -1) document.getElementById(activeSquareIndex).style.backgroundColor = "#0e141b";
+      activeSquareIndex = -1;
+      document.getElementById("menub").style.height = "100%";
+      document.getElementById("menub1").style.display = "flex";
       document.getElementById("menub1").style.opacity = 1;
     }
     function moveStep() {
-      if (currentStep == 1 && selectedSquareIndex == -1) return;
+      if (currentStep == 1 && activeSquareIndex == -1) return;
       if (currentStep == 2) waypointNumber = document.getElementById("wpform").value;
       if (currentStep == 3) {
         if (document.getElementById("tp").checked) priority = "tp"; else priority = "dens";
