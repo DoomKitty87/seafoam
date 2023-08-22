@@ -5,13 +5,13 @@
     <link rel="stylesheet" href="styles.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Seafoam</title>
-    <script type="module" src="/main.js" defer></script>
+    <script type="module" src="routegen.js" defer></script>
   </head>
   <body>
     <div class="navbar"> 
       <img class="icon" src="assets/seafoamarmadillo.webp">
       <h1 class="title">seafoam</h1>
-      <div class="menubutton"><h2 class="buttontext">GENERATE</h2></div>
+      <div class="menubutton" onclick="resetMenu()"><h2 class="buttontext">GENERATE</h2></div>
       <div class="menubutton"><h2 class="buttontext">ROUTES</h2></div>
     </div>
     <div class="main">
@@ -119,7 +119,16 @@
             </form>
           </div>
           <div class="nextbutton" style="margin-top: 2rem">
-            <h2 class="nextbuttontext" onclick="moveStep()">NEXT &#8594</h2>
+            <h2 class="nextbuttontext" onclick="moveStep()">GENERATE</h2>
+          </div>
+        </div>
+        <div class="menuscreen" id="menua4">
+          <div class="infobox">
+            <h1 class="infotitle">GENERATE</h1>
+            <h3 class="infodesc">Your route is being generated. Please wait.</h3>
+          </div>
+          <div class="routeresults">
+            <p class="routeoutput">Route loading...</p>
           </div>
         </div>
       </div>
@@ -130,7 +139,7 @@
 
     var waypointNumber = 150;
 
-    var priority = "TP";
+    var priority = "tp";
     var allowedOOB = 0;
 
     var angleEnable = false;
@@ -147,6 +156,24 @@
       activeSquare = parseInt(indx);
       document.getElementById(indx).style.backgroundColor = "#ffffff";
     }
+    async function getRoute() {
+      var output = generateRoute(activeSquare, allowedOOB, priority, waypointNumber);
+      //document.getElementsByClassName("routeoutput")[0].innerHTML = output[0];
+    }
+    async function resetMenu() {
+      document.getElementById("menua" + (currentStep)).style.opacity = 0;
+      document.getElementsByClassName("progressitem")[currentStep - 1].setAttribute("data-active", "false");
+      document.getElementsByClassName("dot")[currentStep - 1].setAttribute("data-active", "false");
+      await new Promise(r => setTimeout(r, 500)); 
+      document.getElementById("menua" + (currentStep)).style.display = "none";
+      currentStep = 1;
+      document.getElementById(activeSquare).style.backgroundColor = "#0e141b";
+      activeSquare = -1;
+      document.getElementById("menua" + (currentStep)).style.display = "block";
+      document.getElementById("menua" + (currentStep)).style.opacity = 1;
+      document.getElementsByClassName("progressitem")[currentStep - 1].setAttribute("data-active", "true");
+      document.getElementsByClassName("dot")[currentStep - 1].setAttribute("data-active", "true");
+    }
     async function updateMenu(step) {
       document.getElementById("menua" + (step - 1)).style.opacity = 0;
       document.getElementsByClassName("progressitem")[step - 2].setAttribute("data-active", "false");
@@ -157,12 +184,13 @@
       document.getElementById("menua" + (step)).style.opacity = 1;
       document.getElementsByClassName("progressitem")[step - 1].setAttribute("data-active", "true");
       document.getElementsByClassName("dot")[step - 1].setAttribute("data-active", "true");
+      if (step == 4) getRoute();
     }
     function moveStep() {
       if (currentStep == 1 && activeSquare == -1) return;
       if (currentStep == 2) waypointNumber = document.getElementById("wpform").value;
       if (currentStep == 3) {
-        if (document.getElementById("tp").checked) priority = "TP"; else priority = "DENS";
+        if (document.getElementById("tp").checked) priority = "tp"; else priority = "dens";
         allowedOOB = document.getElementsByClassName("oobform")[0].value;
         if (document.getElementById("anglecheck").checked) {
           angleEnable = true; 
@@ -170,6 +198,7 @@
           angle33 = document.getElementsById("angle33").value;
         } else angleEnable = false;
       }
+      if (currentStep == 4) return;
       currentStep++;
       updateMenu(currentStep);
     }

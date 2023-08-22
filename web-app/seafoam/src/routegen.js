@@ -1,4 +1,5 @@
-const fs = require('fs');
+import { readTextFile } from '@tauri-apps/api/fs';
+document.getElementsByClassName("title")[0].innerHTML = "Generating route...";
 
 const overallPads = [];
 // Loading etherwarp pad coordinates
@@ -30,8 +31,6 @@ for (const line of densityLines) {
 
 console.log(`Loaded ${overallPads.length / 3} pads.`);
 
-const desiredPathLength = 150;
-
 const jadecoordsx = 823;
 const jadecoordsz = 202;
 
@@ -49,7 +48,9 @@ for (let i = 0; i < 5; i++) {
   }
 }
 
-async function generateRoute(sector, allowedOOB) {
+function generateRoute(sector, allowedOOB, priority, waypointCount) {
+  document.getElementsByClassName("routeoutput")[0].innerHTML = "Generating route...";
+  const desiredPathLength = waypointCount;
   const padCoords = [];
   const secDensities = [];
   for (var i = 0; i < overallPads.length / 3; i++) {
@@ -68,6 +69,7 @@ async function generateRoute(sector, allowedOOB) {
   var highestDensityDist = Infinity;
 
   for (var i = 0; i < padCoords.length / 3; i++) {
+    document.getElementsByClassName("routeoutput")[0].innerHTML = "Generating route... " + floor(i / padCoords.length * 100) + "%";
     const path = [];
     path.push_back(padCoords[i * 3]);
     path.push_back(padCoords[i * 3 + 1]);
@@ -198,9 +200,18 @@ async function generateRoute(sector, allowedOOB) {
     }
   }
   //Choose between density and dist in settings as well though
-  const outPath = lowestAvgDistPath;
-  const outPathDensity = lowestAvgDistDensity;
-  const outPathDist = lowestAvgDist;
+  var outPath = [];
+  var outPathDensity = 0;
+  var outPathDist = 0;
+  if (priority == "tp") {
+    outPath = lowestAvgDistPath;
+    outPathDensity = lowestAvgDistDensity;
+    outPathDist = lowestAvgDist;
+  } else {
+    outPath = highestDensityPath;
+    outPathDensity = highestDensity;
+    outPathDist = highestDensityDist;
+  }
 
   var pathOutput = "[";
   for (var i = 0; i < outPath.length / 3; i++) {
