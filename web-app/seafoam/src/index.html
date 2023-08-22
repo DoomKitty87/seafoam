@@ -121,6 +121,13 @@
                 </form>
               </div>
               <div class="settingbox">
+                <h2 class="settingdesc">Enable/disable line of sight checking for tps (disable for any route not using etherwarps, allows gems in way of tp).</h2>
+                <form>
+                  <input class="angleenable" type="checkbox" id="los" checked>
+                  <label class="angleenable" for="los">Enable</label>
+                </form>
+              </div>
+              <div class="settingbox">
                 <h2 class="settingdesc">Preference for approach/exit angle difference on a teleport pad.</h2>
                 <form>
                   <input class="angleenable" type="checkbox" id="anglecheck">
@@ -177,7 +184,7 @@
       </div>
     </div>
   <script>
-    async function generateRoute(sector, allowedOOB, priority, waypointCount, angleEnable, angle22, angle33, mfOnly) {
+    async function generateRoute(sector, allowedOOB, priority, waypointCount, angleEnable, angle22, angle33, mfOnly, checkingLOS) {
       const angle3 = Math.min(angle33, 360 - angle33);
       const angle2 = Math.min(angle22, 360 - angle22);
       allowedOOB = parseInt(allowedOOB);
@@ -322,6 +329,7 @@
             }
           }
           var blocked = true;
+          if (!checkingLOS) blocked = false;
           while (blocked) {
             blocked = false;
             const headx = path[path.length - 3];
@@ -424,6 +432,7 @@
     var currentStep = 1;
 
     var mfOnly = false;
+    var checkingLOS = true;
 
     var waypointNumber = 150;
 
@@ -447,7 +456,7 @@
       selectedSquareDiv.style.backgroundColor = "#edbdc2";
     }
     function getRoute() {
-      var output = generateRoute(activeSquareIndex, allowedOOB, priority, waypointNumber, angleEnable, angle22, angle33, mfOnly);
+      var output = generateRoute(activeSquareIndex, allowedOOB, priority, waypointNumber, angleEnable, angle22, angle33, mfOnly, checkingLOS);
     }
     async function resetMenu() {
       document.getElementById("menub").style.height = 0;
@@ -507,6 +516,8 @@
           angle22 = document.getElementById("angle22").value;
           angle33 = document.getElementById("angle33").value;
         } else angleEnable = false;
+        if (document.getElementById("los").checked) checkingLOS = true;
+        else checkingLOS = false;
       }
       if (currentStep == 4) return;
       currentStep++;
