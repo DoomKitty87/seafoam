@@ -132,9 +132,22 @@
           </div>
         </div>
       </div>
+      <div class="menub">
+        <div class="menuscreen" id="menub1">
+          <div class="infobox">
+            <h1 class="infotitle">ROUTES</h1>
+            <h3 class="infodesc">Click on a saved route to view it.</h3>
+          </div>
+          <div class="routebox">
+            <p class="routeoutput">Route loading...</p>
+          </div>
+        </div>
+      </div>
     </div>
   <script>
-    async function generateRoute(sector, allowedOOB, priority, waypointCount) {
+    async function generateRoute(sector, allowedOOB, priority, waypointCount, angleEnable, angle22, angle33) {
+      const angle3 = Math.min(angle33, 360 - angle33);
+      const angle2 = Math.min(angle22, 360 - angle22);
       allowedOOB = parseInt(allowedOOB);
       waypointCount = parseInt(waypointCount);
       const readTextFile = window.__TAURI__.fs.readTextFile;
@@ -235,7 +248,13 @@
             var angleWeight = 1;
             const angleDiff = 180 / Math.PI * Math.abs(Math.atan2(path[path.length - 6] - path[path.length - 3], path[path.length - 4] - path[path.length - 1]) - Math.atan2(padCoords[j * 3] - path[path.length - 3], padCoords[j * 3 + 2] - path[path.length - 1]));
             //Include settable angle weighting later
-
+            if (angleEnable) {
+              if (gemDensity > 50) {
+                angleWeight = Math.abs(Math.min(angleDiff, 360 - angleDiff) - angle3) / 100 + 1
+              } else {
+                angleWeight = Math.abs(Math.min(angleDiff, 360 - angleDiff) - angle2) / 100 + 1
+              }
+            }
             weight = angleWeight * (Math.pow(dist, 2) + Math.pow(startdist, 1 * ((usedPads.length + 1) / desiredPathLength))) / ((gemDensity - 44) * 4);
             if (dist > 62) weight = Infinity;
 
@@ -391,7 +410,7 @@
       document.getElementById(indx).style.backgroundColor = "#ffffff";
     }
     function getRoute() {
-      var output = generateRoute(activeSquare, allowedOOB, priority, waypointNumber);
+      var output = generateRoute(activeSquare, allowedOOB, priority, waypointNumber, angleEnable, angle22, angle33);
     }
     async function resetMenu() {
       document.getElementById("menua" + (currentStep)).style.opacity = 0;
