@@ -15,80 +15,101 @@
       <div class="menubutton"><h2 class="buttontext">ROUTES</h2></div>
     </div>
     <div class="main">
-      <div class="menuscreen" id="menua1">
+      <div class="menua">
         <ul class="progressbar">
           <li class="progressitem" data-active="true">MAP ZONE<span class="dot" data-active="true"></span></li>
           <li class="progressitem" data-active="false">WAYPOINTS<span class="dot"></span></li>
           <li class="progressitem" data-active="false">SETTINGS<span class="dot" data-active="false"></span></li>
           <li class="progressitem" data-active="false">GENERATE<span class="dot" data-active="false"></span></li>
         </ul>
-        <div class="infobox">
-          <h1 class="infotitle">ROUTE AREA</h1>
-          <h3 class="infodesc">Click to choose the area where your route will generate.</h3>
-        </div>
-        <div class="nextbutton">
-          <h2 class="nextbuttontext" onclick="moveStep()">NEXT &#8594</h2>
-        </div>
-        <div class="mapbox">
-          <img class="map" src="assets/map.png">
-          <div class="xaxis">
-            <div class="yaxis">
-              <div class="mapsquare" id="20" onclick="setSquare(20)"></div>
-              <div class="mapsquare" id="21" onclick="setSquare(21)"></div>
-              <div class="mapsquare" id="22" onclick="setSquare(22)"></div>
-              <div class="mapsquare" id="23" onclick="setSquare(23)"></div>
-              <div class="mapsquare" id="24" onclick="setSquare(24)"></div>
-            </div>
-            <div class="yaxis">
-              <div class="mapsquare" id="15" onclick="setSquare(15)"></div>
-              <div class="mapsquare" id="16" onclick="setSquare(16)"></div>
-              <div class="mapsquare" id="17" onclick="setSquare(17)"></div>
-              <div class="mapsquare" id="18" onclick="setSquare(18)"></div>
-              <div class="mapsquare" id="19" onclick="setSquare(19)"></div>
-            </div>
-            <div class="yaxis">
-              <div class="mapsquare" id="10" onclick="setSquare(10)"></div>
-              <div class="mapsquare" id="11" onclick="setSquare(11)"></div>
-              <div class="mapsquare" style="opacity: 0"></div>
-              <div class="mapsquare" id="13" onclick="setSquare(13)"></div>
-              <div class="mapsquare" id="14" onclick="setSquare(14)"></div>
-            </div>
-            <div class="yaxis">
-              <div class="mapsquare" id="5" onclick="setSquare(5)"></div>
-              <div class="mapsquare" id="6" onclick="setSquare(6)"></div>
-              <div class="mapsquare" id="7" onclick="setSquare(7)"></div>
-              <div class="mapsquare" id="8" onclick="setSquare(8)"></div>
-              <div class="mapsquare" id="9" onclick="setSquare(9)"></div>
-            </div>
-            <div class="yaxis">
-              <div class="mapsquare" id="0" onclick="setSquare(0)"></div>
-              <div class="mapsquare" id="1" onclick="setSquare(1)"></div>
-              <div class="mapsquare" id="2" onclick="setSquare(2)"></div>
-              <div class="mapsquare" id="3" onclick="setSquare(3)"></div>
-              <div class="mapsquare" id="4" onclick="setSquare(4)"></div>
+        <div class="menuscreen" id="menua1">
+          <div class="infobox">
+            <h1 class="infotitle">ROUTE AREA</h1>
+            <h3 class="infodesc">Click to choose the area where your route will generate.</h3>
+          </div>
+          <div class="nextbutton">
+            <h2 class="nextbuttontext" onclick="moveStep()">NEXT &#8594</h2>
+          </div>
+          <div class="mapbox">
+            <img class="map" src="assets/map.png">
+            <div class="xaxis">
+              <div class="yaxis">
+                <div class="mapsquare" id="20" onclick="setSquare(20)"></div>
+                <div class="mapsquare" id="21" onclick="setSquare(21)"></div>
+                <div class="mapsquare" id="22" onclick="setSquare(22)"></div>
+                <div class="mapsquare" id="23" onclick="setSquare(23)"></div>
+                <div class="mapsquare" id="24" onclick="setSquare(24)"></div>
+              </div>
+              <div class="yaxis">
+                <div class="mapsquare" id="15" onclick="setSquare(15)"></div>
+                <div class="mapsquare" id="16" onclick="setSquare(16)"></div>
+                <div class="mapsquare" id="17" onclick="setSquare(17)"></div>
+                <div class="mapsquare" id="18" onclick="setSquare(18)"></div>
+                <div class="mapsquare" id="19" onclick="setSquare(19)"></div>
+              </div>
+              <div class="yaxis">
+                <div class="mapsquare" id="10" onclick="setSquare(10)"></div>
+                <div class="mapsquare" id="11" onclick="setSquare(11)"></div>
+                <div class="mapsquare" style="opacity: 0"></div>
+                <div class="mapsquare" id="13" onclick="setSquare(13)"></div>
+                <div class="mapsquare" id="14" onclick="setSquare(14)"></div>
+              </div>
+              <div class="yaxis">
+                <div class="mapsquare" id="5" onclick="setSquare(5)"></div>
+                <div class="mapsquare" id="6" onclick="setSquare(6)"></div>
+                <div class="mapsquare" id="7" onclick="setSquare(7)"></div>
+                <div class="mapsquare" id="8" onclick="setSquare(8)"></div>
+                <div class="mapsquare" id="9" onclick="setSquare(9)"></div>
+              </div>
+              <div class="yaxis">
+                <div class="mapsquare" id="0" onclick="setSquare(0)"></div>
+                <div class="mapsquare" id="1" onclick="setSquare(1)"></div>
+                <div class="mapsquare" id="2" onclick="setSquare(2)"></div>
+                <div class="mapsquare" id="3" onclick="setSquare(3)"></div>
+                <div class="mapsquare" id="4" onclick="setSquare(4)"></div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="menuscreen" id="menua2">
-        <ul class="progressbar">
-          <li class="progressitem" data-active="true">MAP ZONE<span class="dot" data-active="true"></span></li>
-          <li class="progressitem" data-active="false">WAYPOINTS<span class="dot"></span></li>
-          <li class="progressitem" data-active="false">SETTINGS<span class="dot" data-active="false"></span></li>
-          <li class="progressitem" data-active="false">GENERATE<span class="dot" data-active="false"></span></li>
-        </ul>
-        <div class="infobox">
-          <h1 class="infotitle">ROUTE AREA</h1>
-          <h3 class="infodesc">Click to choose the area where your route will generate.</h3>
+        <div class="menuscreen" id="menua2">
+          <div class="infobox">
+            <h1 class="infotitle">WAYPOINTS</h1>
+            <h3 class="infodesc">Enter desired waypoints- route may be +-10% of the value.</h3>
+          </div>
+          <div class="waypointentry">
+            <form>
+              <input id="wpform" class="waypointform" type="number" value="150">
+            </form>
+          </div>
+          <div class="nextbutton">
+            <h2 class="nextbuttontext" onclick="moveStep()">NEXT &#8594</h2>
+          </div>
         </div>
-        <div class="nextbutton">
-          <h2 class="nextbuttontext" onclick="moveStep()">NEXT &#8594</h2>
+        <div class="menuscreen" id="menua3">
+          <div class="infobox">
+            <h1 class="infotitle">SETTINGS</h1>
+          </div>
+          <div class="prioritychoice">
+            <h2 class="settingdesc">Choose priority for teleport distance or density for route output.</h2>
+            <form>
+              <input class="priorityform" id="tp" type="radio" value="TP">
+              <label class="priorityform" for="tp">TP Distance</label>
+              <br>
+              <input class="priorityform" id="dens" type="radio" value="DENS">
+              <label class="priorityform" for="dens">Density</label>
+            </form>
+          </div>
+          <div class="nextbutton">
+            <h2 class="nextbuttontext" onclick="moveStep()">NEXT &#8594</h2>
+          </div>
         </div>
       </div>
     </div>
   <script>
     var activeSquare = -1;
     var currentStep = 1;
+
+    var waypointNumber = 150;
 
     document.getElementById("menua1").style.opacity = 1;
     document.getElementById("menua1").style.display = "block";
@@ -102,13 +123,18 @@
     }
     async function updateMenu(step) {
       document.getElementById("menua" + (step - 1)).style.opacity = 0;
+      document.getElementsByClassName("progressitem")[step - 2].setAttribute("data-active", "false");
+      document.getElementsByClassName("dot")[step - 2].setAttribute("data-active", "false");
       await new Promise(r => setTimeout(r, 500)); 
       document.getElementById("menua" + (step - 1)).style.display = "none";
       document.getElementById("menua" + (step)).style.display = "block";
       document.getElementById("menua" + (step)).style.opacity = 1;
+      document.getElementsByClassName("progressitem")[step - 1].setAttribute("data-active", "true");
+      document.getElementsByClassName("dot")[step - 1].setAttribute("data-active", "true");
     }
     function moveStep() {
       if (currentStep == 1 && activeSquare == -1) return;
+      if (currentStep == 2) waypointNumber = document.getElementById("wpform").value;
       currentStep++;
       updateMenu(currentStep);
     }

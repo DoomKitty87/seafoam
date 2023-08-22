@@ -71,6 +71,7 @@ body {
   font-weight: 500;
   color: #404040;
   display: inline-block;
+  transition: color 0.25s;
 }
 
 .progressitem[data-active="true"] {
@@ -175,4 +176,48 @@ body {
 
 .mapsquare:hover {
   opacity: 0.7;
+}
+
+.waypointentry {
+  position: relative;
+  left: 20rem;
+  margin-top: 2rem;
+  width: 40rem;
+}
+
+.waypointform {
+  background-color: #131b23;
+  height: 2rem;
+  width: 7rem;
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 300;
+  font-family: "Poppins";
+}
+
+.waypointform::-webkit-outer-spin-button,
+.waypointform::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.prioritychoice {
+  position: relative;
+  left: 20rem;
+  width: 40rem;
+}
+
+.priorityform {
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 300;
+  margin-right: 1rem;
+}
+
+.settingdesc {
+  margin-top: 1rem;
+  width: 20rem;
+  font-size: 1rem;
+  font-weight: 300;
+  color: #ffffff;
 }
