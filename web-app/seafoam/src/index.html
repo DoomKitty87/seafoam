@@ -234,7 +234,8 @@
             const angleDiff = 180 / Math.PI * Math.abs(Math.atan2(path[path.length - 6] - path[path.length - 3], path[path.length - 4] - path[path.length - 1]) - Math.atan2(padCoords[j * 3] - path[path.length - 3], padCoords[j * 3 + 2] - path[path.length - 1]));
             //Include settable angle weighting later
 
-            weight = angleWeight * (Math.pow(dist, 2) + Math.pow(startdist, 2 * usedPads.length + 1 / desiredPathLength)) / ((gemDensity - 44) * 4);
+            weight = angleWeight * (Math.pow(dist, 2) + Math.pow(startdist, 1 * ((usedPads.length + 1) / desiredPathLength))) / ((gemDensity - 44) * 4);
+            if (weight == Infinity) console.log("Infinity");
             if (dist > 62) weight = Infinity;
 
             weightChart.push(weight);
@@ -267,7 +268,7 @@
               lowestIndex = j;
             }
           }
-          var blocked = false;
+          var blocked = true;
           while (blocked) {
             blocked = false;
             const headx = path[path.length - 3];
@@ -322,7 +323,7 @@
           density += secDensities[lowestIndex];
         }
 
-        var avgDist;
+        var avgDist = 0;
         for (var j = 0; j < path.length / 3 - 1; j++) {
           avgDist += Math.sqrt(Math.pow(path[j * 3] - path[j * 3 + 3], 2) + Math.pow(path[j * 3 + 1] + 2 - path[j * 3 + 4], 2) + Math.pow(path[j * 3 + 2] - path[j * 3 + 5], 2));
         }
