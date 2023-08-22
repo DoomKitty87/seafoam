@@ -63,6 +63,7 @@ body {
   position: relative;
   left: 40%;
   width: 30rem;
+  transition: opacity 0.5s;
 }
 
 .progressitem {
@@ -306,4 +307,55 @@ label.anglesettings {
   font-size: 1.2rem;
   font-weight: 300;
   margin-top: 1rem;
+}
+
+.routesinfo {
+  position: relative;
+  left: 20rem;
+  width: 40rem;
+  margin-top: 5rem;
+}
+
+.routestitle {
+  font-size: 3rem;
+  font-weight: 500;
+  color: #ffffff;
+  margin-top: 1rem;
+  margin-bottom: 0;
+}
+
+.routesdesc {
+  font-size: 0.8rem;
+  font-weight: 300;
+  color: #ffffff;
+}
+
+.routeviewbox {
+  position: relative;
+  left: 20rem;
+  width: 50rem;
+  height: 40rem;
+  overflow: auto;
+}
+
+.routetitle {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #ffffff;
+  margin-top: 1rem;
+  margin-bottom: 0;
+}
+
+.route {
+  width: 40rem;
+  padding: 1rem;
+  margin-top: 2rem;
+  background-color: #0e141b;
+}
+
+.routeviewer {
+  position: absolute;
+  left: 50rem;
+  width: 40rem;
+  height: 40rem;
 }

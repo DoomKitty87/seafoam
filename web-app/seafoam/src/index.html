@@ -11,7 +11,7 @@
       <img class="icon" src="assets/seafoamarmadillo.webp">
       <h1 class="title">seafoam</h1>
       <div class="menubutton" onclick="resetMenu()"><h2 class="buttontext">GENERATE</h2></div>
-      <div class="menubutton"><h2 class="buttontext">ROUTES</h2></div>
+      <div class="menubutton" onclick="routeMenu()""><h2 class="buttontext">ROUTES</h2></div>
     </div>
     <div class="main">
       <div class="menua">
@@ -134,12 +134,18 @@
       </div>
       <div class="menub">
         <div class="menuscreen" id="menub1">
-          <div class="infobox">
-            <h1 class="infotitle">ROUTES</h1>
-            <h3 class="infodesc">Click on a saved route to view it.</h3>
+          <div class="routesinfo">
+            <div class="routeviewer">
+              <h2 id="routeviewerstats" class="routestats"></h2>
+              <div class="routebox"><p id="routeviewerpath" class="routeoutput"></p></div>
+            </div>
+            <h1 class="routestitle">ROUTES</h1>
+            <h3 class="routesdesc">Click on a saved route to view it.</h3>
           </div>
-          <div class="routebox">
-            <p class="routeoutput">Route loading...</p>
+          <div class="routeviewbox">
+            <!--<div class="route">
+              <h3 class="routetitle">Route title</h3>
+            </div>-->
           </div>
         </div>
       </div>
@@ -413,14 +419,17 @@
       var output = generateRoute(activeSquare, allowedOOB, priority, waypointNumber, angleEnable, angle22, angle33);
     }
     async function resetMenu() {
+      document.getElementById("menub1").style.opacity = 0;
       document.getElementById("menua" + (currentStep)).style.opacity = 0;
       document.getElementsByClassName("progressitem")[currentStep - 1].setAttribute("data-active", "false");
       document.getElementsByClassName("dot")[currentStep - 1].setAttribute("data-active", "false");
       await new Promise(r => setTimeout(r, 500)); 
+      document.getElementById("menub1").style.display = "none";
       document.getElementById("menua" + (currentStep)).style.display = "none";
       currentStep = 1;
-      document.getElementById(activeSquare).style.backgroundColor = "#0e141b";
+      if (activeSquare != -1) document.getElementById(activeSquare).style.backgroundColor = "#0e141b";
       activeSquare = -1;
+      document.getElementsByClassName("progressbar")[0].style.opacity = 1;
       document.getElementById("menua" + (currentStep)).style.display = "block";
       document.getElementById("menua" + (currentStep)).style.opacity = 1;
       document.getElementsByClassName("progressitem")[currentStep - 1].setAttribute("data-active", "true");
@@ -438,6 +447,19 @@
       document.getElementsByClassName("dot")[step - 1].setAttribute("data-active", "true");
       if (step == 4) getRoute();
     }
+    async function routeMenu() {
+      document.getElementsByClassName("progressbar")[0].style.opacity = 0;
+      document.getElementById("menua" + (currentStep)).style.opacity = 0;
+      document.getElementsByClassName("progressitem")[currentStep - 1].setAttribute("data-active", "false");
+      document.getElementsByClassName("dot")[currentStep - 1].setAttribute("data-active", "false");
+      await new Promise(r => setTimeout(r, 500)); 
+      document.getElementById("menua" + (currentStep)).style.display = "none";
+      currentStep = 1;
+      if (activeSquare != -1) document.getElementById(activeSquare).style.backgroundColor = "#0e141b";
+      activeSquare = -1;
+      document.getElementById("menub1").style.display = "block";
+      document.getElementById("menub1").style.opacity = 1;
+    }
     function moveStep() {
       if (currentStep == 1 && activeSquare == -1) return;
       if (currentStep == 2) waypointNumber = document.getElementById("wpform").value;
@@ -453,6 +475,24 @@
       if (currentStep == 4) return;
       currentStep++;
       updateMenu(currentStep);
+    }
+    function changeDisplayedRoute(route) {
+      document.getElementById("routeviewerpath").innerHTML = route.path;
+      document.getElementById("routeviewerstats").innerHTML = `Waypoints: ${route.waypoints}<br>Density: ${route.density}<br>Distance: ${route.distance}`;
+    }
+    function loadSavedRoutes() {
+      //Get list of saved routes from file
+      routes = [];
+      for (const route in routes) {
+        const routeBox = document.createElement("div");
+        routeBox.className = "route";
+        const routeTitle = document.createElement("h3");
+        routeTitle.className = "routetitle";
+        routeTitle.innerHTML = route.title;
+        routeBox.appendChild(routeTitle);
+        routeBox.parentElement = document.getElementById("routebox");
+        routeBox.onclick = changeDisplayedRoute(route);
+      }
     }
   </script>
   </body>
