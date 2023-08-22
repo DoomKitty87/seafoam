@@ -1,54 +1,54 @@
-import { readTextFile } from '@tauri-apps/api/fs';
-document.getElementsByClassName("title")[0].innerHTML = "Generating route...";
-
-const overallPads = [];
-// Loading etherwarp pad coordinates
-const padFile = fs.readFileSync('assets/padsv3.txt', 'utf8');
-const padLines = padFile.trim().split('\n');
-for (const line of padLines) {
-  const [x, y, z] = line.split(' ').map(Number);
-  overallPads.push(x, y, z);
-}
-
-const gemstoneData = fs.readFileSync('assets/blockarraydatav3.txt', 'utf8');
-const blockData = [];
-const lines = gemstoneData.trim().split('\n');
-for (let x = 0; x < 622; x++) {
-  blockData[x] = [];
-  for (let y = 0; y < 256; y++) {
-    blockData[x][y] = [];
-    const values = lines.shift().split(' ').map(Number);
-    blockData[x][y] = values;
+async function generateRoute(sector, allowedOOB, priority, waypointCount) {
+  const readTextFile = window.__TAURI__.fs.readTextFile;
+  const resolveResource = window.__TAURI__.path.resolveResource;
+  const padPath = await resolveResource('assets/padsv3.txt')
+  const overallPads = [];
+  // Loading etherwarp pad coordinates
+  const padFile = await readTextFile(padPath);
+  const padLines = padFile.trim().split('\n');
+  for (const line of padLines) {
+    const [x, y, z] = line.split(' ').map(Number);
+    overallPads.push(x, y, z);
   }
-}
-
-const gemDensities = [];
-const densityFile = fs.readFileSync('assets/densitylistv3.txt', 'utf8');
-const densityLines = densityFile.trim().split('\n');
-for (const line of densityLines) {
-  gemDensities.push(Number(line));
-}
-
-console.log(`Loaded ${overallPads.length / 3} pads.`);
-
-const jadecoordsx = 823;
-const jadecoordsz = 202;
-
-const sectors = [];
-for (let i = 0; i < 5; i++) {
-  for (let j = 0; j < 5; j++) {
-    const sector = [];
-    const cornerx = jadecoordsx + i * -128;
-    const cornerz = jadecoordsz + j * 128;
-    sector.push(cornerx);
-    sector.push(cornerz);
-    sector.push(cornerx - 128);
-    sector.push(cornerz + 128);
-    sectors.push(sector);
+  const gemDataPath = await resolveResource('assets/blockarraydatav3.txt');
+  const gemstoneData = await readTextFile(gemDataPath);
+  const blockData = [];
+  const lines = gemstoneData.trim().split('\n');
+  for (let x = 0; x < 622; x++) {
+    console.log(`Loading block data... ${Math.floor(x / 622 * 100)}%`);
+    blockData[x] = [];
+    for (let y = 0; y < 256; y++) {
+      blockData[x][y] = [];
+      const values = lines.shift().split(' ').map(Number);
+      blockData[x][y] = values;
+    }
   }
-}
+  const densPath = await resolveResource('assets/densitylistv3.txt');
+  const gemDensities = [];
+  const densityFile = await readTextFile(densPath);
+  const densityLines = densityFile.trim().split('\n');
+  for (const line of densityLines) {
+    gemDensities.push(Number(line));
+  }
 
-function generateRoute(sector, allowedOOB, priority, waypointCount) {
+  console.log(`Loaded ${overallPads.length / 3} pads.`);
+
+  const jadecoordsx = 823;
+  const jadecoordsz = 202;
+
+  const sectors = [];
+  for (let i = 0; i < 5; i++) {
+    for (let j = 0; j < 5; j++) {
+      const sector = [];
+      const cornerx = jadecoordsx + i * -128;
+      const cornerz = jadecoordsz + j * 128;
+      sector.push(cornerx);
+      sector.push(cornerz);
+      sector.push(cornerx - 128);
+      sector.push(cornerz + 128);
+      sectors.push(sector);
+    }
+  }
   document.getElementsByClassName("routeoutput")[0].innerHTML = "Generating route...";
   const desiredPathLength = waypointCount;
   const padCoords = [];
