@@ -16,7 +16,7 @@
           </div>
         </div>
         <div class="menubutton" onclick="resetMenu()"><h2 class="buttontext">GENERATE</h2></div>
-        <div class="menubutton" onclick="routeMenu()""><h2 class="buttontext">ROUTES</h2></div>
+        <div class="menubutton" onclick="routeMenu()""><h2 class="buttontext">OLD ROUTES</h2></div>
       </div>
       <div class="main">
         <div class="menucontainer" id="menua">
@@ -29,6 +29,7 @@
           <div class="menuscreen" id="menua1">
             <div class="lefttextcontainer">
               <div class="infobox">
+                <h4 class="infotitlesuperscript">Step One:</h4>
                 <h1 class="infotitle">ROUTE AREA</h1>
                 <h3 class="infodesc">Click to choose the area where your route will generate.</h3>
                 <form>
@@ -37,7 +38,7 @@
                 </form>
               </div>
               <div class="nextbutton">
-                <h2 class="nextbuttontext" onclick="moveStep()">NEXT &#8594</h2>
+                <h2 class="nextbuttontext" id="mapnextbutton" onclick="moveStep()">NEXT &#8594</h2>
               </div>
             </div>
             <div class="rightcontentcontainer">
@@ -86,6 +87,7 @@
           <div class="menuscreen" id="menua2">
             <div class="lefttextcontainer">
               <div class="infobox">
+                <h4 class="infotitlesuperscript">Step Two:</h4>
                 <h1 class="infotitle">WAYPOINTS</h1>
                 <h3 class="infodesc">Enter desired waypoints- route may be +-10% of the value.</h3>
               </div>
@@ -102,6 +104,7 @@
           <div class="menuscreen" id="menua3">
             <div class="lefttextcontainer">
               <div class="infobox">
+                <h4 class="infotitlesuperscript">Step Three:</h4>
                 <h1 class="infotitle">SETTINGS</h1>
               </div>
               <div class="settingbox">
@@ -148,6 +151,7 @@
           <div class="menuscreen" id="menua4">
             <div class="lefttextcontainer">
               <div class="infobox">
+                <h4 class="infotitlesuperscript">Step Four:</h4>
                 <h1 class="infotitle">GENERATE</h1>
                 <h3 class="infodesc">Your route is being generated. Please wait.</h3>
               </div>
@@ -450,6 +454,7 @@
     function selectSquare(index) {
       if (activeSquareIndex != -1) {
         document.getElementById(activeSquareIndex).style.backgroundColor = "#0e141b";
+        document.getElementById("mapnextbutton").style.opacity = 1;
       }
       activeSquareIndex = parseInt(index);
       let selectedSquareDiv = document.getElementById(index);
