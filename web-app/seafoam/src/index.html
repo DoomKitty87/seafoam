@@ -35,6 +35,8 @@
                 <form>
                   <input class="mfbox" type="checkbox" id="mfbox">
                   <label class="mfbox" for="mfbox">Magma Fields Only (Ruby/Topaz)</label>
+                  <input class="mfbox" type="checkbox" id="nodens">
+                  <label class="mfbox" for="nodens">Ignore density (Manual/Bomb mining)</label>
                 </form>
               </div>
               <div class="nextbutton">
@@ -188,7 +190,7 @@
       </div>
     </div>
   <script>
-    async function generateRoute(sector, allowedOOB, priority, waypointCount, angleEnable, angle22, angle33, mfOnly, checkingLOS) {
+    async function generateRoute(sector, allowedOOB, priority, waypointCount, angleEnable, angle22, angle33, mfOnly, checkingLOS, ignoreDens) {
       const angle3 = Math.min(angle33, 360 - angle33);
       const angle2 = Math.min(angle22, 360 - angle22);
       allowedOOB = parseInt(allowedOOB);
@@ -337,7 +339,8 @@
                 angleWeight = Math.abs(Math.min(angleDiff, 360 - angleDiff) - angle2) / 100 + 1
               }
             }
-            weight = angleWeight * (Math.pow(dist, 2) + Math.pow(startdist, 1 * (usedPads.length / desiredPathLength))) / ((gemDensity - 44) * 4);
+            if (ignoreDens) weight = angleWeight * (Math.pow(dist, 2) + Math.pow(startdist, 1 * (usedPads.length / desiredPathLength)));
+            else weight = angleWeight * (Math.pow(dist, 2) + Math.pow(startdist, 1 * (usedPads.length / desiredPathLength))) / ((gemDensity - 44) * 4);
             if (dist > 62) weight = Infinity;
 
             weightChart.push(weight);
@@ -475,6 +478,7 @@
 
     var mfOnly = false;
     var checkingLOS = true;
+    var noDens = false;
 
     var waypointNumber = 150;
 
@@ -499,7 +503,7 @@
       selectedSquareDiv.style.backgroundColor = "#edbdc2";
     }
     function getRoute() {
-      var output = generateRoute(activeSquareIndex, allowedOOB, priority, waypointNumber, angleEnable, angle22, angle33, mfOnly, checkingLOS);
+      var output = generateRoute(activeSquareIndex, allowedOOB, priority, waypointNumber, angleEnable, angle22, angle33, mfOnly, checkingLOS, noDens);
     }
     async function resetMenu() {
       document.getElementById("menub").style.height = 0;
@@ -549,7 +553,10 @@
     }
     function moveStep() {
       if (currentStep == 1 && activeSquareIndex == -1) return;
-      if (currentStep == 1) mfOnly = document.getElementById("mfbox").checked;
+      if (currentStep == 1) {
+        mfOnly = document.getElementById("mfbox").checked;
+        noDens = document.getElementById("nodens").checked;
+      }
       if (currentStep == 2) waypointNumber = document.getElementById("wpform").value;
       if (currentStep == 3) {
         if (document.getElementById("tp").checked) priority = "tp"; else priority = "dens";
