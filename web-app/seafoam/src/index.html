@@ -16,7 +16,7 @@
           </div>
         </div>
         <div class="menubutton" onclick="resetMenu()"><h2 class="buttontext">GENERATE</h2></div>
-        <div class="menubutton" onclick="routeMenu()""><h2 class="buttontext">ROUTES</h2></div>
+        <div class="menubutton" onclick="routeMenu()""><h2 class="buttontext">OLD ROUTES</h2></div>
       </div>
       <div class="main">
         <div class="menucontainer" id="menua">
@@ -29,6 +29,7 @@
           <div class="menuscreen" id="menua1">
             <div class="lefttextcontainer">
               <div class="infobox">
+                <h4 class="infotitlesuperscript">Step One:</h4>
                 <h1 class="infotitle">ROUTE AREA</h1>
                 <h3 class="infodesc">Click to choose the area where your route will generate.</h3>
                 <form>
@@ -37,7 +38,7 @@
                 </form>
               </div>
               <div class="nextbutton">
-                <h2 class="nextbuttontext" onclick="moveStep()">NEXT &#8594</h2>
+                <h2 class="nextbuttontext" id="mapnextbutton" onclick="moveStep()">NEXT &#8594</h2>
               </div>
             </div>
             <div class="rightcontentcontainer">
@@ -86,6 +87,7 @@
           <div class="menuscreen" id="menua2">
             <div class="lefttextcontainer">
               <div class="infobox">
+                <h4 class="infotitlesuperscript">Step Two:</h4>
                 <h1 class="infotitle">WAYPOINTS</h1>
                 <h3 class="infodesc">Enter desired waypoints- route may be +-10% of the value.</h3>
               </div>
@@ -102,6 +104,7 @@
           <div class="menuscreen" id="menua3">
             <div class="lefttextcontainer">
               <div class="infobox">
+                <h4 class="infotitlesuperscript">Step Three:</h4>
                 <h1 class="infotitle">SETTINGS</h1>
               </div>
               <div class="settingbox">
@@ -148,6 +151,7 @@
           <div class="menuscreen" id="menua4">
             <div class="lefttextcontainer">
               <div class="infobox">
+                <h4 class="infotitlesuperscript">Step Four:</h4>
                 <h1 class="infotitle">GENERATE</h1>
                 <h3 class="infodesc">Your route is being generated. Please wait.</h3>
               </div>
@@ -191,18 +195,43 @@
       waypointCount = parseInt(waypointCount);
       const readTextFile = window.__TAURI__.fs.readTextFile;
       const resolveResource = window.__TAURI__.path.resolveResource;
-      const padPath = await resolveResource('assets/padsv3.txt')
+      const padPath = await resolveResource('assets/pads.json')
       const overallPads = [];
+      const gemDensities = [];
       // Loading etherwarp pad coordinates
       const padFile = await readTextFile(padPath);
+      const padData = JSON.parse(padFile);
+      for (const pad of padData) {
+        overallPads.push(parseInt(pad.x), parseInt(pad.y), parseInt(pad.z));
+        gemDensities.push(parseInt(pad.density));
+      }
+      console.log("Done loading pads.");
+      /*
       const padLines = padFile.trim().split('\n');
       for (const line of padLines) {
         const [x, y, z] = line.split(' ').map(Number);
         overallPads.push(x, y, z);
       }
-      const gemDataPath = await resolveResource('assets/blockarraydatav3.txt');
+      */
+      const gemDataPath = await resolveResource('assets/sector' + sector + '.json');
       const gemstoneData = await readTextFile(gemDataPath);
+      const gemData = JSON.parse(gemstoneData);
+      console.log("Loaded block json");
       const blockData = [];
+      blockData.length = 640;
+      for (let x = 0; x < 640; x++) {
+        blockData[x] = [];
+        blockData[x].length = 256;
+        for (let y = 0; y < 256; y++) {
+          blockData[x][y] = [];
+          blockData[x][y].length = 640;
+          for (let z = 0; z < 640; z++) {
+            blockData[x][y][z] = 0;
+          }
+        }
+      }
+      
+      /*
       const lines = gemstoneData.trim().split('\n');
       for (let x = 0; x < 622; x++) {
         console.log(`Loading block data... ${Math.floor(x / 622 * 100)}%`);
@@ -213,14 +242,16 @@
           blockData[x][y] = values;
         }
       }
-      const densPath = await resolveResource('assets/densitylistv3.txt');
+      */
+      //const densPath = await resolveResource('assets/densitylistv3.txt');
+      /*
       const gemDensities = [];
       const densityFile = await readTextFile(densPath);
       const densityLines = densityFile.trim().split('\n');
       for (const line of densityLines) {
         gemDensities.push(Number(line));
       }
-
+      */
       console.log(`Loaded ${overallPads.length / 3} pads.`);
 
       const jadecoordsx = 823;
@@ -229,16 +260,27 @@
       const sectors = [];
       for (let i = 0; i < 5; i++) {
         for (let j = 0; j < 5; j++) {
-          const sector = [];
+          const sectortmp = [];
           const cornerx = jadecoordsx + i * -128;
           const cornerz = jadecoordsz + j * 128;
-          sector.push(cornerx);
-          sector.push(cornerz);
-          sector.push(cornerx - 128);
-          sector.push(cornerz + 128);
-          sectors.push(sector);
+          sectortmp.push(cornerx);
+          sectortmp.push(cornerz);
+          sectortmp.push(cornerx - 128);
+          sectortmp.push(cornerz + 128);
+          sectors.push(sectortmp);
         }
       }
+      if (checkingLOS) {
+        for (let x = 0; x < 128; x++) {
+          for (let y = 0; y < 256; y++) {
+            for (let z = 0; z < 128; z++) {
+              blockData[sectors[sector][0] - x - 202][y][z + sectors[sector][1] - 202] = gemData[x][y][z];
+            }
+          }
+        }
+        console.log("Done loading blocks.");
+      }
+  
       const desiredPathLength = waypointCount;
       const padCoords = [];
       const secDensities = [];
@@ -425,7 +467,7 @@
       pathOutput += "]";
       document.getElementById("routeout").innerHTML = pathOutput;
       console.log(outPath.length / 3, outPathDensity, outPathDist);
-      document.getElementById("routestats").innerHTML = `Waypoints: ${outPath.length / 3}<br>Density: ${outPathDensity}<br>Distance: ${outPathDist}`;
+      document.getElementById("routestats").innerHTML = `Waypoints: ${outPath.length / 3}<br>Density: ${outPathDensity.toPrecision(4)}<br>Distance: ${outPathDist.toPrecision(4)}`;
       return pathOutput, outPath.length / 3, outPathDensity, outPathDist;
     }
     var activeSquareIndex = -1;
@@ -449,8 +491,9 @@
 
     function selectSquare(index) {
       if (activeSquareIndex != -1) {
-        document.getElementById(activeSquareIndex).style.backgroundColor = "#0e141b";
+        document.getElementById(activeSquareIndex).style.backgroundColor = "rgba(1, 1, 2, 0.665)";
       }
+      document.getElementById("mapnextbutton").style.opacity = 1;
       activeSquareIndex = parseInt(index);
       let selectedSquareDiv = document.getElementById(index);
       selectedSquareDiv.style.backgroundColor = "#edbdc2";
@@ -518,6 +561,8 @@
         } else angleEnable = false;
         if (document.getElementById("los").checked) checkingLOS = true;
         else checkingLOS = false;
+        document.getElementById("routeout").innerHTML = "Route loading...";
+        document.getElementById("routestats").innerHTML = "";
       }
       if (currentStep == 4) return;
       currentStep++;
