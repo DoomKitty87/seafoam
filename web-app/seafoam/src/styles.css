@@ -159,8 +159,8 @@ body {
   border-radius: 50%;
   display: block;
   margin: 0.5rem auto auto auto;
-  transition: opacity 0.25s;
-  transition: transform 0.5s;
+  transition: opacity 0.25s ease-out;
+  transition: transform 0.25s ease-out;
   transform: scale(0.5);
   opacity: 0.3;
 }
@@ -216,7 +216,7 @@ body {
 
 #mapnextbutton {
   opacity: 0;
-  transition: opacity 0.5s ease-in;
+  transition: opacity 0.2s ease-out;
 }
 
 .nextbutton {
@@ -342,8 +342,9 @@ body {
 .settingdesc {
   margin-top: 1rem;
   width: 20rem;
-  font-size: 1rem;
-  font-weight: 300;
+  font-size: 12pt;
+  font-family: "Poppins-Thin";
+  letter-spacing: 0.05rem;
   color: var(--white-text-color);
 }
 

@@ -453,9 +453,9 @@
 
     function selectSquare(index) {
       if (activeSquareIndex != -1) {
-        document.getElementById(activeSquareIndex).style.backgroundColor = "#0e141b";
-        document.getElementById("mapnextbutton").style.opacity = 1;
+        document.getElementById(activeSquareIndex).style.backgroundColor = "rgba(1, 1, 2, 0.665)";
       }
+      document.getElementById("mapnextbutton").style.opacity = 1;
       activeSquareIndex = parseInt(index);
       let selectedSquareDiv = document.getElementById(index);
       selectedSquareDiv.style.backgroundColor = "#edbdc2";
