@@ -276,6 +276,7 @@
         for (let x = 0; x < 128; x++) {
           for (let y = 0; y < 256; y++) {
             for (let z = 0; z < 128; z++) {
+              if (sectors[sector][0] - x - 202 > 621 || sectors[sector][0] - x - 202 < 0 || z + sectors[sector][1] - 202 > 621 || z + sectors[sector][1] - 202 < 0) continue;
               blockData[sectors[sector][0] - x - 202][y][z + sectors[sector][1] - 202] = gemData[x][y][z];
             }
           }
