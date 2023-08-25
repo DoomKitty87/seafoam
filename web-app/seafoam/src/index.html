@@ -132,6 +132,14 @@
                   <input class="oobform" type="number" id="minpad" value="3">
                 </form>
               </div>
+              <!--
+              <div class="settingbox">
+                <h2 class="settingdesc">Change density threshold (used for manual routes). Will slow down runtime.</h2>
+                <form>
+                  <input class="oobform" type="number" id="densform" value="45">
+                </form>
+              </div>
+              -->
               <div class="settingbox">
                 <h2 class="settingdesc">Enable/disable line of sight checking for tps (disable for any route not using etherwarps, allows gems in way of tp).</h2>
                 <form>
@@ -208,6 +216,12 @@
                   <br>
                   <input class="priorityform" id="iron" type="radio" value="iron" name="oretype">
                   <label class="priorityform" for="iron">Iron</label>
+                  <br>
+                  <input class="priorityform" id="gemstone" type="radio" value="gemstone" name="oretype">
+                  <label class="priorityform" for="gemstone">Gemstone (Manual)</label>
+                  <br>
+                  <input class="priorityform" id="mithril" type="radio" value="mithril" name="oretype">
+                  <label class="priorityform" for="mithril">Mithril</label>
                   <br>
                   <input class="mfbox" type="checkbox" id="mfore">
                   <label class="mfbox" for="mfore">Magma Fields Only</label>
@@ -358,6 +372,7 @@
       const angle2 = Math.min(angle22, 360 - angle22);
       allowedOOB = parseInt(allowedOOB);
       waypointCount = parseInt(waypointCount);
+      //densityThreshold = parseInt(densityThreshold);
       const readTextFile = window.__TAURI__.fs.readTextFile;
       const resolveResource = window.__TAURI__.path.resolveResource;
       const padPath = await resolveResource('assets/pads.json')
@@ -371,6 +386,7 @@
         gemDensities.push(parseInt(pad.density));
       }
       console.log("Done loading pads.");
+      console.log(`Loaded ${overallPads.length / 3} pads.`);
       /*
       const padLines = padFile.trim().split('\n');
       for (const line of padLines) {
@@ -417,7 +433,6 @@
         gemDensities.push(Number(line));
       }
       */
-      console.log(`Loaded ${overallPads.length / 3} pads.`);
 
       const jadecoordsx = 823;
       const jadecoordsz = 202;
@@ -446,7 +461,35 @@
         }
         console.log("Done loading blocks.");
       }
-  
+      /*
+      if (densityThreshold != 45) {
+        for (let x = 0; x < 128; x++) {
+          for (let y = 0; y < 254; y++) {
+            for (let z = 0; z < 128; z++) {
+              var x2 = sectors[sector][0] - x - 202;
+              var z2 = z + sectors[sector][1] - 202;
+              if (x2 > 621 || x2 < 0 || z2 > 621 || z2 < 0) continue;
+              if (blockData[x2][y + 1][z2] != 0 || blockData[x2][y + 2][z2] != 0) continue;
+              var density = 0;
+              for (let x3 = -1; x3 < 2; x3++) {
+                for (let y3 = 1; y3 < 6; y3++) {
+                  for (let z3 = -1; z3 < 2; z3++) {
+                    if (x2 + x3 > 621 || x2 + x3 < 0 || z2 + z3 > 621 || z2 + z3 < 0 || y + y3 > 255) continue;
+                    density += parseInt(blockData[x2 + x3][y + y3][z2 + z3]);
+                  }
+                }
+              }
+              if (density > 0) console.log(density);
+              if (density >= densityThreshold) {
+                console.log(density);
+                overallPads.push(x2 + 202, y, z2 + 202);
+                gemDensities.push(density);
+              }
+            }
+          }
+        }
+      }
+      */
       const desiredPathLength = waypointCount;
       const padCoords = [];
       const secDensities = [];
@@ -644,7 +687,7 @@
     var checkingLOS = true;
     var noDens = false;
     var minPadDist = 3;
-
+    //var densityThreshold = 45;
     var waypointNumber = 150;
 
     var priority = "tp";
@@ -674,12 +717,14 @@
     function genOre() {
       var oreType;
       if (document.getElementById("coal").checked) oreType = "coal";
+      else if (document.getElementById("gemstone").checked) oreType = "gemstone";
+      else if (document.getElementById("mithril").checked) oreType = "mithril";
       else oreType = "iron";
       oreRoute(oreType, document.getElementById("wps").value, document.getElementById("mfore").checked, document.getElementById("minpaddist").value, document.getElementById("originx").value, document.getElementById("originy").value, document.getElementById("originz").value);
     }
     async function resetMenu() {
       document.getElementById("menuc").style.height = 0;
-      document.getElementById("menuc" + (currentStep)).style.display = "none";
+      document.getElementById("menuc").style.display = "none";
       document.getElementById("menub").style.height = 0;
       document.getElementById("menub1").style.opacity = 0;
       document.getElementById("menua" + (currentStep)).style.opacity = 0;
@@ -763,6 +808,7 @@
         if (document.getElementById("los").checked) checkingLOS = true;
         else checkingLOS = false;
         minPadDist = document.getElementById("minpad").value;
+        //densityThreshold = document.getElementById("densform").value;
         document.getElementById("routeout").innerHTML = "Route loading...";
         document.getElementById("routestats").innerHTML = "";
       }
