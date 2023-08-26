@@ -38,6 +38,9 @@
                   <label class="mfbox" for="mfbox">Magma Fields Only (Ruby/Topaz)</label>
                   <input class="mfbox" type="checkbox" id="nodens">
                   <label class="mfbox" for="nodens">Ignore density (Manual/Bomb mining)</label>
+                  <br>
+                  <input class="mfbox" type="checkbox" id="rubyonly">
+                  <label class="mfbox" for="rubyonly">Ruby only (Manual)</label>
                 </form>
               </div>
               <div class="nextbutton">
@@ -113,7 +116,7 @@
               <div class="settingbox">
                 <h2 class="settingdesc">Choose priority for teleport distance or density for route output.</h2>
                 <form>
-                  <input class="priorityform" id="tp" type="radio" value="TP" name="priority">
+                  <input class="priorityform" id="tp" type="radio" value="TP" name="priority" checked>
                   <label class="priorityform" for="tp">TP Distance</label>
                   <br>
                   <input class="priorityform" id="dens" type="radio" value="DENS" name="priority">
@@ -367,7 +370,7 @@
       pathOutput += "]";
       document.getElementById("oreout").innerHTML = pathOutput;
     }
-    async function generateRoute(sector, allowedOOB, priority, waypointCount, angleEnable, angle22, angle33, mfOnly, checkingLOS, ignoreDens, minPadDist) {
+    async function generateRoute(sector, allowedOOB, priority, waypointCount, angleEnable, angle22, angle33, mfOnly, checkingLOS, ignoreDens, minPadDist, rubyOnly) {
       const angle3 = Math.min(angle33, 360 - angle33);
       const angle2 = Math.min(angle22, 360 - angle22);
       allowedOOB = parseInt(allowedOOB);
@@ -375,16 +378,33 @@
       //densityThreshold = parseInt(densityThreshold);
       const readTextFile = window.__TAURI__.fs.readTextFile;
       const resolveResource = window.__TAURI__.path.resolveResource;
-      const padPath = await resolveResource('assets/pads.json')
+      var padPath;
+      if (rubyOnly) {
+        console.log("Ruby Only");
+        ignoreDens = true;
+        angleEnable = false;
+        checkingLOS = false;
+        priority = "tp";
+      }
+      if (rubyOnly) padPath = await resolveResource('assets/rubypads.json');
+      else padPath = await resolveResource('assets/pads.json')
       const overallPads = [];
       const gemDensities = [];
       // Loading etherwarp pad coordinates
       const padFile = await readTextFile(padPath);
       const padData = JSON.parse(padFile);
-      for (const pad of padData) {
-        overallPads.push(parseInt(pad.x), parseInt(pad.y), parseInt(pad.z));
-        gemDensities.push(parseInt(pad.density));
+      if (!rubyOnly) {
+        for (const pad of padData) {
+          overallPads.push(parseInt(pad.x), parseInt(pad.y), parseInt(pad.z));
+          gemDensities.push(parseInt(pad.density));
+        }
+      } else {
+        for (const pad of padData) {
+          overallPads.push(pad[0], pad[1], pad[2]);
+          gemDensities.push(0);
+        }
       }
+
       console.log("Done loading pads.");
       console.log(`Loaded ${overallPads.length / 3} pads.`);
       /*
@@ -548,6 +568,7 @@
             }
             if (ignoreDens) weight = angleWeight * (Math.pow(dist, 2) + Math.pow(startdist, 1 * (usedPads.length / desiredPathLength)));
             else weight = angleWeight * (Math.pow(dist, 2) + Math.pow(startdist, 1 * (usedPads.length / desiredPathLength))) / ((gemDensity - 44) * 4);
+            //if (weight == Infinity) console.log("Infinity");
             if (dist > 62) weight = Infinity;
 
             weightChart.push(weight);
@@ -556,6 +577,7 @@
           var lowestWeight = Infinity;
 
           for (var j = 0; j < weightChart.length; j++) {
+            if (rubyOnly && j == i && path.length < desiredPathLength) continue;
             if (j == i && path.length == 6) continue;
             if (padCoords[j * 3] == path[path.length - 3] && padCoords[j * 3 + 1] == path[path.length - 2] && padCoords[j * 3 + 2] == path[path.length - 1]) {
               weightChart[j] = Infinity;
@@ -625,6 +647,7 @@
           }
           if (lowestIndex == i) {
             //console.log("Route complete.");
+            //console.log(path.length / 3, density, avgDist)
             done = true;
             break;
           }
@@ -643,15 +666,29 @@
         avgDist += Math.sqrt(Math.pow(path[path.length - 3] - path[0], 2) + Math.pow(path[j * 3 + 1] + 2 - path[1], 2) + Math.pow(path[path.length - 1] - path[2], 2));
         avgDist /= path.length / 3 + 1;
         density /= path.length / 3;
-        if (avgDist < lowestAvgDist && desiredPathLength - desiredPathLength / 10 <= path.length / 3 && path.length / 3 <= desiredPathLength + desiredPathLength / 10) {
-          lowestAvgDist = avgDist;
-          lowestAvgDistDensity = density;
-          lowestAvgDistPath = path;
-        }
-        if (density > highestDensity && desiredPathLength - desiredPathLength / 10 <= path.length / 3 && path.length / 3 <= desiredPathLength + desiredPathLength / 10) {
-          highestDensity = density;
-          highestDensityPath = path;
-          highestDensityDist = avgDist;
+        if (rubyOnly) {
+          if (avgDist < lowestAvgDist && desiredPathLength - desiredPathLength / 5 <= path.length / 3) {
+            //console.log("Found Lowest");
+            lowestAvgDist = avgDist;
+            lowestAvgDistDensity = density;
+            lowestAvgDistPath = path;
+          }
+          if (density > highestDensity && desiredPathLength - desiredPathLength / 5 <= path.length / 3) {
+            highestDensity = density;
+            highestDensityPath = path;
+            highestDensityDist = avgDist;
+          }
+        } else {
+          if (avgDist < lowestAvgDist && desiredPathLength - desiredPathLength / 10 <= path.length / 3 && path.length / 3 <= desiredPathLength + desiredPathLength / 10) {
+            lowestAvgDist = avgDist;
+            lowestAvgDistDensity = density;
+            lowestAvgDistPath = path;
+          }
+          if (density > highestDensity && desiredPathLength - desiredPathLength / 10 <= path.length / 3 && path.length / 3 <= desiredPathLength + desiredPathLength / 10) {
+            highestDensity = density;
+            highestDensityPath = path;
+            highestDensityDist = avgDist;
+          }
         }
         //console.log(path.length / 3, density, avgDist);
       }
@@ -668,7 +705,6 @@
         outPathDensity = highestDensity;
         outPathDist = highestDensityDist;
       }
-
       var pathOutput = "[";
       for (var i = 0; i < outPath.length / 3; i++) {
         pathOutput += "{\"x\":" + outPath[i * 3] + ",\"y\":" + outPath[i * 3 + 1] + ",\"z\":" + outPath[i * 3 + 2] + ",\"r\":0,\"g\":1,\"b\":0,\"options\":{\"name\":\"" + (i + 1) + "\"}}";
@@ -696,6 +732,7 @@
     var angleEnable = false;
     var angle22 = 0;
     var angle33 = 0;
+    var rubyOnly = false;
 
     document.getElementById("menua1").style.opacity = 1;
     document.getElementById("menua1").style.display = "flex";
@@ -712,7 +749,7 @@
       selectedSquareDiv.style.backgroundColor = "#edbdc2";
     }
     function getRoute() {
-      var output = generateRoute(activeSquareIndex, allowedOOB, priority, waypointNumber, angleEnable, angle22, angle33, mfOnly, checkingLOS, noDens);
+      var output = generateRoute(activeSquareIndex, allowedOOB, priority, waypointNumber, angleEnable, angle22, angle33, mfOnly, checkingLOS, noDens, minPadDist, rubyOnly);
     }
     function genOre() {
       var oreType;
@@ -795,6 +832,7 @@
       if (currentStep == 1) {
         mfOnly = document.getElementById("mfbox").checked;
         noDens = document.getElementById("nodens").checked;
+        rubyOnly = document.getElementById("rubyonly").checked;
       }
       if (currentStep == 2) waypointNumber = document.getElementById("wpform").value;
       if (currentStep == 3) {
