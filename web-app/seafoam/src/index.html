@@ -559,7 +559,7 @@
             var angleWeight = 1;
             const angleDiff = 180 / Math.PI * Math.abs(Math.atan2(path[path.length - 6] - path[path.length - 3], path[path.length - 4] - path[path.length - 1]) - Math.atan2(padCoords[j * 3] - path[path.length - 3], padCoords[j * 3 + 2] - path[path.length - 1]));
             //Include settable angle weighting later
-            if (angleEnable) {
+            if (angleEnable && path.length > 5) {
               if (gemDensity > 50) {
                 angleWeight = Math.abs(Math.min(angleDiff, 360 - angleDiff) - angle3) / 100 + 1
               } else {
