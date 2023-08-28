@@ -535,7 +535,8 @@
       for (var i = 0; i < overallPads.length / 3; i++) {
         if (overallPads[i * 3] <= sectors[sector][0] + allowedOOB && overallPads[i * 3] > sectors[sector][2] - allowedOOB && overallPads[i * 3 + 2] >= sectors[sector][1] - allowedOOB && overallPads[i * 3 + 2] < sectors[sector][3] + allowedOOB) {
           if (mfOnly && !oneGemOnly && overallPads[i * 3 + 1] >= 64) continue;
-          if (mfOnly && oneGemOnly && overallPads[i * 3 + 1] >= 66) continue;
+          if (mfOnly && oneGemOnly && gemType != "topaz" && gemType != "ruby" && (overallPads[i * 3 + 1] >= 68 || overallPads[i * 3 + 1] <= 65)) continue;
+          if (mfOnly && oneGemOnly && (gemType == "topaz" || gemType == "ruby") && overallPads[i * 3 + 1] >= 64) continue;
           padCoords.push(overallPads[i * 3]);
           padCoords.push(overallPads[i * 3 + 1]);
           padCoords.push(overallPads[i * 3 + 2]);
