@@ -40,7 +40,25 @@
                   <label class="mfbox" for="nodens">Ignore density (Manual/Bomb mining)</label>
                   <br>
                   <input class="mfbox" type="checkbox" id="rubyonly">
-                  <label class="mfbox" for="rubyonly">Ruby only (Manual)</label>
+                  <label class="mfbox" for="rubyonly">Single gem (Manual)</label>
+                  <h3 class="infodesc">Below only applies if Single gem is checked.</h3>
+                  <input class="priorityform" id="ruby" type="radio" value="ruby" name="gemtype" checked>
+                  <label class="priorityform" for="ruby">Ruby</label>
+                  <br>
+                  <input class="priorityform" id="sapphire" type="radio" value="sapphire" name="gemtype">
+                  <label class="priorityform" for="sapphire">Sapphire</label>
+                  <br>
+                  <input class="priorityform" id="amber" type="radio" value="amber" name="gemtype">
+                  <label class="priorityform" for="amber">Amber</label>
+                  <br>
+                  <input class="priorityform" id="jade" type="radio" value="jade" name="gemtype">
+                  <label class="priorityform" for="jade">Jade</label>
+                  <br>
+                  <input class="priorityform" id="amethyst" type="radio" value="amethyst" name="gemtype">
+                  <label class="priorityform" for="amethyst">Amethyst</label>
+                  <br>
+                  <input class="priorityform" id="topaz" type="radio" value="topaz" name="gemtype">
+                  <label class="priorityform" for="topaz">Topaz</label>
                 </form>
               </div>
               <div class="nextbutton">
@@ -370,7 +388,7 @@
       pathOutput += "]";
       document.getElementById("oreout").innerHTML = pathOutput;
     }
-    async function generateRoute(sector, allowedOOB, priority, waypointCount, angleEnable, angle22, angle33, mfOnly, checkingLOS, ignoreDens, minPadDist, rubyOnly) {
+    async function generateRoute(sector, allowedOOB, priority, waypointCount, angleEnable, angle22, angle33, mfOnly, checkingLOS, ignoreDens, minPadDist, oneGemOnly, gemType) {
       const angle3 = Math.min(angle33, 360 - angle33);
       const angle2 = Math.min(angle22, 360 - angle22);
       allowedOOB = parseInt(allowedOOB);
@@ -379,21 +397,21 @@
       const readTextFile = window.__TAURI__.fs.readTextFile;
       const resolveResource = window.__TAURI__.path.resolveResource;
       var padPath;
-      if (rubyOnly) {
-        console.log("Ruby Only");
+      if (oneGemOnly) {
+        console.log("Single Gem");
         ignoreDens = true;
         angleEnable = false;
         checkingLOS = false;
         priority = "tp";
       }
-      if (rubyOnly) padPath = await resolveResource('assets/rubypads.json');
+      if (oneGemOnly) padPath = await resolveResource('assets/' + gemType + 'pads.json');
       else padPath = await resolveResource('assets/pads.json')
       const overallPads = [];
       const gemDensities = [];
       // Loading etherwarp pad coordinates
       const padFile = await readTextFile(padPath);
       const padData = JSON.parse(padFile);
-      if (!rubyOnly) {
+      if (!oneGemOnly) {
         for (const pad of padData) {
           overallPads.push(parseInt(pad.x), parseInt(pad.y), parseInt(pad.z));
           gemDensities.push(parseInt(pad.density));
@@ -516,7 +534,8 @@
       console.log(sectors[sector][0] + allowedOOB, sectors[sector][2] - allowedOOB, sectors[sector][1] - allowedOOB, sectors[sector][3] + allowedOOB)
       for (var i = 0; i < overallPads.length / 3; i++) {
         if (overallPads[i * 3] <= sectors[sector][0] + allowedOOB && overallPads[i * 3] > sectors[sector][2] - allowedOOB && overallPads[i * 3 + 2] >= sectors[sector][1] - allowedOOB && overallPads[i * 3 + 2] < sectors[sector][3] + allowedOOB) {
-          if (mfOnly && overallPads[i * 3 + 1] >= 64) continue;
+          if (mfOnly && !oneGemOnly && overallPads[i * 3 + 1] >= 64) continue;
+          if (mfOnly && oneGemOnly && overallPads[i * 3 + 1] >= 66) continue;
           padCoords.push(overallPads[i * 3]);
           padCoords.push(overallPads[i * 3 + 1]);
           padCoords.push(overallPads[i * 3 + 2]);
@@ -577,7 +596,7 @@
           var lowestWeight = Infinity;
 
           for (var j = 0; j < weightChart.length; j++) {
-            if (rubyOnly && j == i && path.length < desiredPathLength) continue;
+            if (oneGemOnly && j == i && path.length < desiredPathLength) continue;
             if (j == i && path.length == 6) continue;
             if (padCoords[j * 3] == path[path.length - 3] && padCoords[j * 3 + 1] == path[path.length - 2] && padCoords[j * 3 + 2] == path[path.length - 1]) {
               weightChart[j] = Infinity;
@@ -666,7 +685,7 @@
         avgDist += Math.sqrt(Math.pow(path[path.length - 3] - path[0], 2) + Math.pow(path[j * 3 + 1] + 2 - path[1], 2) + Math.pow(path[path.length - 1] - path[2], 2));
         avgDist /= path.length / 3 + 1;
         density /= path.length / 3;
-        if (rubyOnly) {
+        if (oneGemOnly) {
           if (avgDist < lowestAvgDist && desiredPathLength - desiredPathLength / 5 <= path.length / 3) {
             //console.log("Found Lowest");
             lowestAvgDist = avgDist;
@@ -732,7 +751,8 @@
     var angleEnable = false;
     var angle22 = 0;
     var angle33 = 0;
-    var rubyOnly = false;
+    var oneGemOnly = false;
+    var gemType = "ruby";
 
     document.getElementById("menua1").style.opacity = 1;
     document.getElementById("menua1").style.display = "flex";
@@ -749,7 +769,7 @@
       selectedSquareDiv.style.backgroundColor = "#edbdc2";
     }
     function getRoute() {
-      var output = generateRoute(activeSquareIndex, allowedOOB, priority, waypointNumber, angleEnable, angle22, angle33, mfOnly, checkingLOS, noDens, minPadDist, rubyOnly);
+      var output = generateRoute(activeSquareIndex, allowedOOB, priority, waypointNumber, angleEnable, angle22, angle33, mfOnly, checkingLOS, noDens, minPadDist, oneGemOnly, gemType);
     }
     function genOre() {
       var oreType;
@@ -832,7 +852,20 @@
       if (currentStep == 1) {
         mfOnly = document.getElementById("mfbox").checked;
         noDens = document.getElementById("nodens").checked;
-        rubyOnly = document.getElementById("rubyonly").checked;
+        oneGemOnly = document.getElementById("rubyonly").checked;
+        if (document.getElementById("ruby").checked) {
+          gemType = "ruby";
+        } else if (document.getElementById("sapphire").checked) {
+          gemType = "sapphire";
+        } else if (document.getElementById("amber").checked) {
+          gemType = "amber";
+        } else if (document.getElementById("jade").checked) {
+          gemType = "jade";
+        } else if (document.getElementById("amethyst").checked) {
+          gemType = "amethyst";
+        } else if (document.getElementById("topaz").checked) {
+          gemType = "topaz";
+        }
       }
       if (currentStep == 2) waypointNumber = document.getElementById("wpform").value;
       if (currentStep == 3) {
