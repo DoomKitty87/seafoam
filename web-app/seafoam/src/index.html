@@ -238,6 +238,9 @@
                   <input class="priorityform" id="iron" type="radio" value="iron" name="oretype">
                   <label class="priorityform" for="iron">Iron</label>
                   <br>
+                  <input class="priorityform" id="redstone" type="radio" value="redstone" name="oretype">
+                  <label class="priorityform" for="redstone">Redstone</label>
+                  <br>
                   <input class="priorityform" id="gemstone" type="radio" value="gemstone" name="oretype">
                   <label class="priorityform" for="gemstone">Gemstone (Manual)</label>
                   <br>
@@ -777,6 +780,7 @@
       if (document.getElementById("coal").checked) oreType = "coal";
       else if (document.getElementById("gemstone").checked) oreType = "gemstone";
       else if (document.getElementById("mithril").checked) oreType = "mithril";
+      else if (document.getElementById("redstone").checked) oreType = "redstone";
       else oreType = "iron";
       oreRoute(oreType, document.getElementById("wps").value, document.getElementById("mfore").checked, document.getElementById("minpaddist").value, document.getElementById("originx").value, document.getElementById("originy").value, document.getElementById("originz").value);
     }
