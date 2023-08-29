@@ -39,6 +39,12 @@
                   <input class="mfbox" type="checkbox" id="nodens">
                   <label class="mfbox" for="nodens">Ignore density (Manual/Bomb mining)</label>
                   <br>
+                  <input class="mfbox" type="checkbox" id="hybrid">
+                  <label class="mfbox" for="hybrid">Hybrid dillo ruby</label>
+                  <br>
+                  <input class="mfbox" type="checkbox" id="nomf">
+                  <label class="mfbox" for="nomf">No magma fields (for hybrid)</label>
+                  <br>
                   <input class="mfbox" type="checkbox" id="rubyonly">
                   <label class="mfbox" for="rubyonly">Single gem (Manual)</label>
                   <h3 class="infodesc">Below only applies if Single gem is checked.</h3>
@@ -241,6 +247,9 @@
                   <input class="priorityform" id="redstone" type="radio" value="redstone" name="oretype">
                   <label class="priorityform" for="redstone">Redstone</label>
                   <br>
+                  <input class="priorityform" id="lapis" type="radio" value="lapis" name="oretype">
+                  <label class="priorityform" for="lapis">Lapis</label>
+                  <br>
                   <input class="priorityform" id="gemstone" type="radio" value="gemstone" name="oretype">
                   <label class="priorityform" for="gemstone">Gemstone (Manual)</label>
                   <br>
@@ -391,7 +400,7 @@
       pathOutput += "]";
       document.getElementById("oreout").innerHTML = pathOutput;
     }
-    async function generateRoute(sector, allowedOOB, priority, waypointCount, angleEnable, angle22, angle33, mfOnly, checkingLOS, ignoreDens, minPadDist, oneGemOnly, gemType) {
+    async function generateRoute(sector, allowedOOB, priority, waypointCount, angleEnable, angle22, angle33, mfOnly, checkingLOS, ignoreDens, minPadDist, oneGemOnly, gemType, hybrid, nomf) {
       const angle3 = Math.min(angle33, 360 - angle33);
       const angle2 = Math.min(angle22, 360 - angle22);
       allowedOOB = parseInt(allowedOOB);
@@ -408,7 +417,10 @@
         priority = "tp";
       }
       if (oneGemOnly) padPath = await resolveResource('assets/' + gemType + 'pads.json');
-      else padPath = await resolveResource('assets/pads.json')
+      else {
+        if (!hybrid) padPath = await resolveResource('assets/pads.json');
+        else padPath = await resolveResource('assets/rubyhybrid.json');
+      }
       const overallPads = [];
       const gemDensities = [];
       // Loading etherwarp pad coordinates
@@ -540,6 +552,7 @@
           if (mfOnly && !oneGemOnly && overallPads[i * 3 + 1] >= 64) continue;
           if (mfOnly && oneGemOnly && gemType != "topaz" && gemType != "ruby" && (overallPads[i * 3 + 1] >= 68 || overallPads[i * 3 + 1] <= 65)) continue;
           if (mfOnly && oneGemOnly && (gemType == "topaz" || gemType == "ruby") && overallPads[i * 3 + 1] >= 64) continue;
+          if (nomf && overallPads[i * 3 + 1] < 64) continue;
           padCoords.push(overallPads[i * 3]);
           padCoords.push(overallPads[i * 3 + 1]);
           padCoords.push(overallPads[i * 3 + 2]);
@@ -757,6 +770,8 @@
     var angle33 = 0;
     var oneGemOnly = false;
     var gemType = "ruby";
+    var hybrid = false;
+    var nomf = false;
 
     document.getElementById("menua1").style.opacity = 1;
     document.getElementById("menua1").style.display = "flex";
@@ -773,7 +788,7 @@
       selectedSquareDiv.style.backgroundColor = "#edbdc2";
     }
     function getRoute() {
-      var output = generateRoute(activeSquareIndex, allowedOOB, priority, waypointNumber, angleEnable, angle22, angle33, mfOnly, checkingLOS, noDens, minPadDist, oneGemOnly, gemType);
+      var output = generateRoute(activeSquareIndex, allowedOOB, priority, waypointNumber, angleEnable, angle22, angle33, mfOnly, checkingLOS, noDens, minPadDist, oneGemOnly, gemType, hybrid, nomf);
     }
     function genOre() {
       var oreType;
@@ -781,6 +796,7 @@
       else if (document.getElementById("gemstone").checked) oreType = "gemstone";
       else if (document.getElementById("mithril").checked) oreType = "mithril";
       else if (document.getElementById("redstone").checked) oreType = "redstone";
+      else if (document.getElementById("lapis").checked) oreType = "lapis";
       else oreType = "iron";
       oreRoute(oreType, document.getElementById("wps").value, document.getElementById("mfore").checked, document.getElementById("minpaddist").value, document.getElementById("originx").value, document.getElementById("originy").value, document.getElementById("originz").value);
     }
@@ -858,6 +874,8 @@
         mfOnly = document.getElementById("mfbox").checked;
         noDens = document.getElementById("nodens").checked;
         oneGemOnly = document.getElementById("rubyonly").checked;
+        hybrid = document.getElementById("hybrid").checked;
+        nomf = document.getElementById("nomf").checked;
         if (document.getElementById("ruby").checked) {
           gemType = "ruby";
         } else if (document.getElementById("sapphire").checked) {
