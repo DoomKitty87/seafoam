@@ -255,9 +255,24 @@
                   <br>
                   <input class="priorityform" id="mithril" type="radio" value="mithril" name="oretype">
                   <label class="priorityform" for="mithril">Mithril</label>
-                  <br>
+                  <br><br>
                   <input class="mfbox" type="checkbox" id="mfore">
                   <label class="mfbox" for="mfore">Magma Fields Only</label>
+                  <br><br>
+                  <input class="priorityform" id="none" type="radio" value="none" name="biomelock" checked>
+                  <label class="priorityform" for="none">No Biome Lock</label>
+                  <br>
+                  <input class="priorityform" id="lockGoblin" type="radio" value="lockGoblin" name="biomelock">
+                  <label class="priorityform" for="lockGoblin">Goblin Holdout</label>
+                  <br>
+                  <input class="priorityform" id="lockPrecursor" type="radio" value="lockPrecursor" name="biomelock">
+                  <label class="priorityform" for="lockPrecursor">Precursor Remnants</label>
+                  <br>
+                  <input class="priorityform" id="lockJungle" type="radio" value="lockJungle" name="biomelock">
+                  <label class="priorityform" for="lockJungle">Jungle</label>
+                  <br>
+                  <input class="priorityform" id="lockDeposits" type="radio" value="lockDeposits" name="biomelock">
+                  <label class="priorityform" for="lockDeposits">Mithril Deposits</label>
                   <br><br>
                   <input class="oobform" type="number" id="wps" value="100">
                   <label class="anglesettings" for="wps">Waypoint count</label>
@@ -285,7 +300,9 @@
       </div>
     </div>
   <script>
-    async function oreRoute(oreType, waypointCount, mfOnly, minDist, originX, originY, originZ) {
+    const biomeData = [[201, 512, 512, 824], [512, 824, 512, 824], [201, 512, 201, 512], [512, 824, 201, 512]];
+    // Biomelock is 0 - Goblin, 1 - Precursor, 2 - Jungle, 3 - Deposits,
+    async function oreRoute(oreType, waypointCount, mfOnly, minDist, originX, originY, originZ, biomeLock) {
       originX -= 202;
       originZ -= 202;
       originY = parseInt(originY);
@@ -310,7 +327,11 @@
       }
       console.log(oreData.length);
       for (let i = 0; i < oreData.length; i++) {
-        oreArray[oreData[i][0] - 202][oreData[i][1]][oreData[i][2] - 202] = 1;
+        if (biomeLock == -1) oreArray[oreData[i][0] - 202][oreData[i][1]][oreData[i][2] - 202] = 1;
+        else {
+          if (oreData[i][0] > biomeData[biomeLock][1] || oreData[i][0] < biomeData[biomeLock][0] || oreData[i][2] > biomeData[biomeLock][3] || oreData[i][2] < biomeData[biomeLock][2]) continue;
+          oreArray[oreData[i][0] - 202][oreData[i][1]][oreData[i][2] - 202] = 1;
+        }
       }
       console.log("Done loading ore.");
       var foundStart = false;
@@ -792,13 +813,18 @@
     }
     function genOre() {
       var oreType;
+      var biomeLock;
       if (document.getElementById("coal").checked) oreType = "coal";
       else if (document.getElementById("gemstone").checked) oreType = "gemstone";
       else if (document.getElementById("mithril").checked) oreType = "mithril";
       else if (document.getElementById("redstone").checked) oreType = "redstone";
       else if (document.getElementById("lapis").checked) oreType = "lapis";
       else oreType = "iron";
-      oreRoute(oreType, document.getElementById("wps").value, document.getElementById("mfore").checked, document.getElementById("minpaddist").value, document.getElementById("originx").value, document.getElementById("originy").value, document.getElementById("originz").value);
+      if (document.getElementById("lockGoblin").checked) biomeLock = 0;
+      else if (document.getElementById("lockPrecursor").checked) biomeLock = 1;
+      else if (document.getElementById("lockJungle").checked) biomeLock = 2;
+      else if (document.getElementById("lockDeposits").checked) biomeLock = 3;
+      oreRoute(oreType, document.getElementById("wps").value, document.getElementById("mfore").checked, document.getElementById("minpaddist").value, document.getElementById("originx").value, document.getElementById("originy").value, document.getElementById("originz").value, biomeLock);
     }
     async function resetMenu() {
       document.getElementById("menuc").style.height = 0;
