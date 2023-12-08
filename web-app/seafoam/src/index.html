@@ -256,9 +256,6 @@
                   <input class="priorityform" id="mithril" type="radio" value="mithril" name="oretype">
                   <label class="priorityform" for="mithril">Mithril</label>
                   <br><br>
-                  <input class="mfbox" type="checkbox" id="mfore">
-                  <label class="mfbox" for="mfore">Magma Fields Only</label>
-                  <br><br>
                   <input class="priorityform" id="none" type="radio" value="none" name="biomelock" checked>
                   <label class="priorityform" for="none">No Biome Lock</label>
                   <br>
@@ -273,6 +270,9 @@
                   <br>
                   <input class="priorityform" id="lockDeposits" type="radio" value="lockDeposits" name="biomelock">
                   <label class="priorityform" for="lockDeposits">Mithril Deposits</label>
+                  <br>
+                  <input class="priorityform" id="lockMf" type="radio" value="lockMf" name="biomelock">
+                  <label class="priorityform" for="lockMf">Magma Fields</label>
                   <br><br>
                   <input class="oobform" type="number" id="wps" value="100">
                   <label class="anglesettings" for="wps">Waypoint count</label>
@@ -302,7 +302,7 @@
   <script>
     const biomeData = [[201, 512, 512, 824], [512, 824, 512, 824], [201, 512, 201, 512], [512, 824, 201, 512]];
     // Biomelock is 0 - Goblin, 1 - Precursor, 2 - Jungle, 3 - Deposits,
-    async function oreRoute(oreType, waypointCount, mfOnly, minDist, originX, originY, originZ, biomeLock) {
+    async function oreRoute(oreType, waypointCount, minDist, originX, originY, originZ, biomeLock) {
       originX -= 202;
       originZ -= 202;
       originY = parseInt(originY);
@@ -327,7 +327,7 @@
       }
       console.log(oreData.length);
       for (let i = 0; i < oreData.length; i++) {
-        if (biomeLock == -1) oreArray[oreData[i][0] - 202][oreData[i][1]][oreData[i][2] - 202] = 1;
+        if (biomeLock == -1 || biomeLock == 4) oreArray[oreData[i][0] - 202][oreData[i][1]][oreData[i][2] - 202] = 1;
         else {
           if (oreData[i][0] > biomeData[biomeLock][1] || oreData[i][0] < biomeData[biomeLock][0] || oreData[i][2] > biomeData[biomeLock][3] || oreData[i][2] < biomeData[biomeLock][2]) continue;
           oreArray[oreData[i][0] - 202][oreData[i][1]][oreData[i][2] - 202] = 1;
@@ -355,7 +355,7 @@
         for (let x = -startX; x < startX; x++) {
           for (let y = -startY; y < startY; y++) {
             for (let z = -startZ; z < startZ; z++) {
-              if (mfOnly && y >= 64) continue;
+              if (biomeLock == 4 && y + originY >= 64) continue;
               if (originX + x < 0 || originX + x > 639 || originY + y < 0 || originY + y > 255 || originZ + z < 0 || originZ + z > 639) continue;
               if (oreArray[originX + x][originY + y][originZ + z] != 1) continue;
               path.push(originX + x, originY + y, originZ + z);
@@ -383,7 +383,7 @@
               for (let z = -zRad; z < zRad; z++) {
                 if (x == 0 && y == 0 && z == 0) continue;
                 if (Math.abs(x) < minDist && Math.abs(y) < minDist && Math.abs(z) < minDist) continue;
-                if (mfOnly && path[path.length - 2] + y >= 64) continue;
+                if (biomeLock == 4 && path[path.length - 2] + y >= 64) continue;
                 if (path[path.length - 3] + x < 0 || path[path.length - 3] + x > 639 || path[path.length - 2] + y < 0 || path[path.length - 2] + y > 255 || path[path.length - 1] + z < 0 || path[path.length - 1] + z > 639) continue;
                 if (oreArray[path[path.length - 3] + x][path[path.length - 2] + y][path[path.length - 1] + z] != 1) continue;
                 var cntue = false;
@@ -824,7 +824,8 @@
       else if (document.getElementById("lockPrecursor").checked) biomeLock = 1;
       else if (document.getElementById("lockJungle").checked) biomeLock = 2;
       else if (document.getElementById("lockDeposits").checked) biomeLock = 3;
-      oreRoute(oreType, document.getElementById("wps").value, document.getElementById("mfore").checked, document.getElementById("minpaddist").value, document.getElementById("originx").value, document.getElementById("originy").value, document.getElementById("originz").value, biomeLock);
+      else if (document.getElementById("lockMf").checked) biomeLock = 4;
+      oreRoute(oreType, document.getElementById("wps").value, document.getElementById("minpaddist").value, document.getElementById("originx").value, document.getElementById("originy").value, document.getElementById("originz").value, biomeLock);
     }
     async function resetMenu() {
       document.getElementById("menuc").style.height = 0;
